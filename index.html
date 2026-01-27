@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian IPA Kelas 4 - Bunyi & Pendengaran</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Smooth Transition */
+        .transition-all { transition: all 0.3s ease; }
+        /* Hide Radio Button but keep functional */
+        .option-input:checked + .option-label {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased" oncontextmenu="return false;">
+
+<div id="login-screen" class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl border border-slate-200 text-center transform hover:scale-[1.01] transition-all">
+        <div class="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-700 mb-2">Evaluasi IPA Kelas 4</h2>
+        <p class="text-slate-500 mb-8">Tema: Bunyi dan Indera Pendengaran</p>
+        
+        <input type="text" id="student-name" placeholder="Masukkan Nama Lengkap" 
+            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none mb-4 transition-all">
+        
+        <button onclick="startExam()" 
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-indigo-200 transition-all">
+            Mulai Ujian Sekarang
+        </button>
+        <p class="text-xs text-slate-400 mt-6 italic">*Dilarang membuka tab baru selama ujian berlangsung</p>
+    </div>
+</div>
+
+<div id="quiz-area" class="hidden max-w-4xl mx-auto py-10 px-4">
+    <div class="sticky top-4 z-50 bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-200 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h3 id="display-name" class="text-lg font-bold text-indigo-900">Nama Siswa</h3>
+            <p class="text-sm text-slate-500">Belum dijawab: <span id="unanswered-count" class="font-bold text-orange-500">20</span></p>
+        </div>
+        <div id="timer" class="text-2xl font-mono font-bold bg-slate-800 text-white px-6 py-2 rounded-xl border-b-4 border-indigo-500">
+            30:00
+        </div>
+    </div>
+
+    <form id="quiz-form" class="space-y-6">
+        <div id="questions-list" class="space-y-6">
+            </div>
+        
+        <button type="button" onclick="finishExam()" 
+            class="w-full mt-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-xl transform hover:-translate-y-1 transition-all">
+            Selesaikan dan Kirim Jawaban
+        </button>
+    </form>
+</div>
+
+<div id="result-screen" class="hidden flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white w-full max-w-xl p-10 rounded-3xl shadow-2xl border border-slate-100 text-center">
+        <h2 class="text-2xl font-bold text-slate-700 mb-2">Hasil Ujian</h2>
+        <div class="relative flex items-center justify-center my-8">
+            <div class="absolute inset-0 bg-indigo-100 rounded-full blur-2xl opacity-50"></div>
+            <h1 id="final-score" class="relative text-8xl font-black text-indigo-600">0</h1>
+        </div>
+        <p id="score-details" class="text-lg text-slate-600 mb-8 italic"></p>
+        
+        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wider font-semibold">Otorisasi Admin untuk Reset</p>
+            <input type="password" id="admin-pass" placeholder="Password Admin" 
+                class="w-full px-4 py-2 rounded-lg border border-slate-300 mb-4 focus:ring-2 focus:ring-red-400 outline-none">
+            <button onclick="adminReset()" 
+                class="w-full bg-slate-800 hover:bg-black text-white py-2 rounded-lg transition-all font-medium">
+                Reset & Kembali ke Menu
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ADMIN_PASSWORD = "admin123";
+    let timeLeft = 30 * 60;
+    let timerInterval;
+
+    const questions = [
+        { q: "Bunyi dihasilkan oleh benda yang...", a: "Bergetar", b: "Diam", c: "Berpindah", d: "Panas", correct: "a" },
+        { q: "Bunyi tidak dapat merambat melalui...", a: "Benda padat", b: "Ruang hampa udara", c: "Air", d: "Udara", correct: "b" },
+        { q: "Bagian telinga yang berfungsi menangkap getaran bunyi adalah...", a: "Gendang telinga", b: "Daun telinga", c: "Saluran eustachius", d: "Saraf pendengaran", correct: "a" },
+        { q: "Alat musik yang dimainkan dengan cara ditiup adalah...", a: "Gitar", b: "Seruling", c: "Drum", d: "Kecapi", correct: "b" },
+        { q: "Manusia dapat mendengar bunyi pada frekuensi...", a: "Dibawah 20 Hz", b: "20 - 20.000 Hz", c: "Diatas 20.000 Hz", d: "Semua benar", correct: "b" },
+        { q: "Bunyi pantul yang terdengar setelah bunyi asli selesai diucapkan disebut...", a: "Gaung", b: "Gema", c: "Resonansi", d: "Desis", correct: "b" },
+        { q: "Daun telinga berfungsi untuk...", a: "Menerima rangsang", b: "Mengumpulkan gelombang bunyi", c: "Keseimbangan tubuh", d: "Melindungi telinga dalam", correct: "b" },
+        { q: "Bunyi yang frekuensinya teratur disebut...", a: "Desah", b: "Nada", c: "Dentum", d: "Warna bunyi", correct: "b" },
+        { q: "Telinga bagian tengah terdiri dari tulang pendengaran, yaitu...", a: "Martil, Landasan, Sanggurdi", b: "Paha, Kering, Betis", c: "Lengan, Jari, Pergelangan", d: "Ubun-ubun, Pelipis", correct: "a" },
+        { q: "Hewan yang dapat mendengar bunyi ultrasonik adalah...", a: "Anjing", b: "Kelelawar", c: "Kucing", d: "Ayam", correct: "b" },
+        { q: "Bunyi merambat paling cepat melalui media...", a: "Udara", b: "Air", c: "Benda padat", d: "Ruang hampa", correct: "c" },
+        { q: "Fungsi liang telinga adalah...", a: "Menangkap bunyi", b: "Meneruskan bunyi ke gendang telinga", c: "Menjaga keseimbangan", d: "Mengatur tekanan udara", correct: "b" },
+        { q: "Gema biasanya terjadi di...", a: "Kamar kosong", b: "Lembah atau perbukitan", c: "Gedung bioskop", d: "Dalam kelas", correct: "b" },
+        { q: "Satuan keras lemahnya bunyi adalah...", a: "Hertz", b: "Meter", c: "Desibel", d: "Kilogram", correct: "c" },
+        { q: "Cara merawat telinga yang benar adalah...", a: "Membersihkan dengan benda tajam", b: "Mendengarkan musik sangat keras", c: "Membersihkan dengan kapas halus secara hati-hati", d: "Memasukkan air ke telinga", correct: "c" },
+        { q: "Bunyi pantul yang datang bersamaan dengan bunyi asli sehingga suara tidak jelas disebut...", a: "Gema", b: "Gaung", c: "Nada", d: "Irama", correct: "b" },
+        { q: "Indera pendengar kita adalah...", a: "Mata", b: "Hidung", c: "Lidah", d: "Telinga", correct: "d" },
+        { q: "Resonansi adalah peristiwa ikut bergetarnya suatu benda karena...", a: "Sentuhan", b: "Pengaruh getaran benda lain", c: "Tiupan angin", d: "Suhu panas", correct: "b" },
+        { q: "Cairan di dalam telinga dalam yang berfungsi sebagai alat keseimbangan disebut...", a: "Serumen", b: "Perilimfa", c: "Eustachius", d: "Koklea", correct: "b" },
+        { q: "Peredam bunyi biasanya dipasang di...", a: "Lapangan", b: "Studio musik", c: "Pasar", d: "Jalan raya", correct: "b" }
+    ];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function startExam() {
+        const name = document.getElementById('student-name').value;
+        if (!name) return alert("Silakan masukkan nama Anda!");
+        
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
+        
+        renderQuestions();
+        startTimer();
+    }
+
+    function renderQuestions() {
+        shuffle(questions);
+        const list = document.getElementById('questions-list');
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-all";
+            card.innerHTML = `
+                <p class="text-lg font-semibold text-slate-700 mb-4 leading-relaxed">${index + 1}. ${item.q}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    ${['a', 'b', 'c', 'd'].map(opt => `
+                        <label class="relative flex items-center group cursor-pointer">
+                            <input type="radio" name="q${index}" value="${opt}" onchange="updateCounter()" class="option-input hidden">
+                            <div class="option-label w-full p-4 rounded-xl border-2 border-slate-100 bg-slate-50 group-hover:bg-slate-100 transition-all text-slate-600 font-medium flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-white border border-slate-300 flex items-center justify-center mr-3 text-xs font-bold uppercase">${opt}</span>
+                                ${item[opt]}
+                            </div>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function updateCounter() {
+        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        document.getElementById('unanswered-count').innerText = questions.length - answered;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) { clearInterval(timerInterval); finishExam(); }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function finishExam() {
+        if (timeLeft > 0) {
+            if (!confirm("Yakin ingin menyelesaikan ujian sekarang?")) return;
+        }
+        clearInterval(timerInterval);
+        let correct = 0;
+        questions.forEach((item, index) => {
+            const sel = document.querySelector(`input[name="q${index}"]:checked`);
+            if (sel && sel.value === item.correct) correct++;
+        });
+        const score = (correct / questions.length) * 100;
+        document.getElementById('quiz-area').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('score-details').innerText = `Selamat ${document.getElementById('student-name').value}, kamu menjawab benar ${correct} dari ${questions.length} soal.`;
+    }
+
+    function adminReset() {
+        if (document.getElementById('admin-pass').value === ADMIN_PASSWORD) {
+            location.reload();
+        } else {
+            alert("Password Salah!");
+        }
+    }
+
+    // Anti Tab Switch
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && !document.getElementById('quiz-area').classList.contains('hidden')) {
+            alert("Peringatan! Jangan meninggalkan halaman ujian.");
+        }
+    });
+</script>
+</body>
+</html>
