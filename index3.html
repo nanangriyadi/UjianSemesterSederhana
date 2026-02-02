@@ -40,7 +40,7 @@
     </div>
 
     <div class="max-w-3xl mx-auto p-4 space-y-6 mt-6" id="questions-container">
-        </div>
+    </div>
 
     <div class="max-w-3xl mx-auto p-4">
         <button onclick="calculateResult()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-6 rounded-2xl text-2xl shadow-xl transition-all">Selesai & Lihat Nilai ✨</button>
@@ -69,20 +69,78 @@
         {q: "Karet gelang yang dipetik menghasilkan bunyi karena...", a: "Putus", b: "Bergetar", c: "Membesar", d: "Basah", cct: "b"},
         {q: "Media rambat bunyi yang paling cepat adalah...", a: "Gas", b: "Cair", c: "Padat", d: "Hampa", cct: "c"},
         {q: "Telinga manusia normal mendengar frekuensi...", a: "2-20 Hz", b: "20-20.000 Hz", c: "Di atas 20.000 Hz", d: "0-10 Hz", cct: "b"},
-        // ... (Tambahkan 30 soal lagi untuk Bab 1 dengan variasi serupa)
-        
+        {q: "Getaran yang menghasilkan bunyi terjadi pada...", a: "Senar gitar", b: "Kertas diam", c: "Batu", d: "Meja", cct: "a"},
+        {q: "Bunyi terdengar lebih keras di dalam air karena...", a: "Air hangat", b: "Air padat", c: "Merambat lebih cepat", d: "Air berwarna", cct: "c"},
+        {q: "Gendang telinga berfungsi untuk...", a: "Menerima getaran bunyi", b: "Menyaring udara", c: "Melihat", d: "Mencium", cct: "a"},
+        {q: "Alat musik yang dipukul untuk menghasilkan bunyi adalah...", a: "Suling", b: "Terompet", c: "Gendang", d: "Biola", cct: "c"},
+        {q: "Bunyi yang frekuensinya di atas 20.000 Hz disebut...", a: "Infrasonik", b: "Audiosonik", c: "Ultrasonik", d: "Megasonik", cct: "c"},
+        {q: "Contoh benda yang dapat meredam bunyi adalah...", a: "Kaca", b: "Besi", c: "Gabus", d: "Keramik", cct: "c"},
+        {q: "Sifat bunyi yang dapat dipantulkan disebut...", a: "Refleksi", b: "Refraksi", c: "Difraksi", d: "Absorpsi", cct: "a"},
+        {q: "Gema dimanfaatkan pada alat...", a: "Termometer", b: "Sonar", c: "Barometer", d: "Amperemeter", cct: "b"},
+        {q: "Tinggi rendahnya bunyi ditentukan oleh...", a: "Amplitudo", b: "Frekuensi", c: "Kecepatan", d: "Massa", cct: "b"},
+        {q: "Bunyi merambat paling lambat melalui...", a: "Besi", b: "Air", c: "Udara", d: "Kayu", cct: "c"},
+        {q: "Bagian telinga tengah yang berbentuk tulang kecil adalah...", a: "Koklea", b: "Martil, Landasan, Sanggurdi", c: "Saluran Eustachius", d: "Saraf Pendengaran", cct: "b"},
+        {q: "Resonansi adalah...", a: "Pemantulan bunyi", b: "Ikut bergetarnya benda", c: "Penyerapan bunyi", d: "Pembiasan bunyi", cct: "b"},
+        {q: "Dolphin menggunakan bunyi untuk...", a: "Bernafas", b: "Berkomunikasi dan mencari makan", c: "Berenang", d: "Tidur", cct: "b"},
+        {q: "Alat musik petik adalah...", a: "Piano", b: "Gitar", c: "Drum", d: "Terompet", cct: "b"},
+        {q: "Bunyi pantul yang sebagian bersamaan dengan bunyi asli disebut...", a: "Gema", b: "Gaung", c: "Resonansi", d: "Harmoni", cct: "b"},
+        {q: "Telinga bagian dalam berisi...", a: "Udara", b: "Cairan Limfa", c: "Darah", d: "Minyak", cct: "b"},
+        {q: "Manusia tidak dapat mendengar bunyi infrasonik karena frekuensinya...", a: "Terlalu tinggi", b: "Terlalu rendah", c: "Sedang", d: "Tidak ada", cct: "b"},
+        {q: "Studio musik menggunakan peredam bunyi seperti busa untuk mencegah...", a: "Bunyi masuk", b: "Gema", c: "Resonansi", d: "Frekuensi", cct: "b"},
+        {q: "Cepat rambat bunyi di udara sekitar...", a: "100 m/s", b: "200 m/s", c: "340 m/s", d: "500 m/s", cct: "c"},
+        {q: "Koklea berfungsi untuk...", a: "Mengubah getaran menjadi sinyal listrik", b: "Melindungi telinga", c: "Menyaring udara", d: "Mengeluarkan kotoran", cct: "a"},
+        {q: "Bunyi petir terdengar setelah kilat karena...", a: "Cahaya lebih lambat", b: "Bunyi lebih lambat dari cahaya", c: "Bunyi lebih cepat", d: "Tidak ada hubungan", cct: "b"},
+        {q: "Nada pada alat musik ditentukan oleh...", a: "Warna", b: "Frekuensi getaran", c: "Ukuran alat", d: "Bahan pembuat", cct: "b"},
+        {q: "Alat yang menggunakan prinsip gema adalah...", a: "Mikroskop", b: "Teleskop", c: "USG", d: "Termometer", cct: "c"},
+        {q: "Senar gitar yang lebih tegang menghasilkan bunyi...", a: "Lebih rendah", b: "Lebih tinggi", c: "Sama", d: "Tidak berbunyi", cct: "b"},
+        {q: "Saluran Eustachius menghubungkan telinga tengah dengan...", a: "Hidung", b: "Tenggorokan", c: "Mulut", d: "Mata", cct: "b"},
+        {q: "Bunyi bel listrik dihasilkan oleh...", a: "Getaran logam", b: "Aliran air", c: "Cahaya", d: "Magnet diam", cct: "a"},
+        {q: "Ruangan kosong menghasilkan gema karena...", a: "Tidak ada penyerap bunyi", b: "Terlalu terang", c: "Terlalu dingin", d: "Terlalu besar", cct: "a"},
+        {q: "Hewan yang menggunakan ekolokasi adalah...", a: "Kucing", b: "Anjing", c: "Lumba-lumba", d: "Ayam", cct: "c"},
+        {q: "Bunyi garpu tala digunakan untuk...", a: "Mengukur panjang", b: "Menala alat musik", c: "Mengukur suhu", d: "Melihat jauh", cct: "b"},
+        {q: "Telinga luar terdiri dari daun telinga dan...", a: "Gendang telinga", b: "Saluran telinga", c: "Koklea", d: "Saraf", cct: "b"},
+
         // BAB 2: CAHAYA DAN INDRA PENGLIHATAN (40 SOAL)
-        {q: "Cahaya merambat secara...", a: "Berbelok", b: "Lurus", c: "Melingkar", d: "Gelombang", cct: "b"},
+        {q: "Cahaya merambat secara...", a: "Berbelok", b: "Lurus", c: "Melingkar", d: "Gelombang acak", cct: "b"},
         {q: "Benda yang dapat ditembus cahaya disebut benda...", a: "Gelap", b: "Bening", c: "Padat", d: "Keras", cct: "b"},
         {q: "Cermin yang permukaannya melengkung ke dalam disebut...", a: "Datar", b: "Cembung", c: "Cekung", d: "Ganda", cct: "c"},
-        {q: "Contoh pembiasan cahaya dalam kehidupan sehari-hari adalah...", a: "Bayangan cermin", b: "Pelangi", c: "Dasar kolam terlihat dangkal", d: "Lampu senter", cct: "c"},
+        {q: "Contoh pembiasan cahaya dalam kehidupan sehari-hari adalah...", a: "Bayangan cermin", b: "Pelangi", c: "Pensil dalam air terlihat patah", d: "Lampu senter", cct: "c"},
         {q: "Bagian mata yang mengatur jumlah cahaya masuk adalah...", a: "Iris", b: "Pupil", c: "Retina", d: "Lensa", cct: "b"},
         {q: "Alat untuk melihat benda yang sangat kecil adalah...", a: "Teleskop", b: "Periskop", c: "Mikroskop", d: "Lup", cct: "c"},
         {q: "Warna cahaya matahari sebenarnya terdiri dari...", a: "1 warna", b: "3 warna", c: "7 warna", d: "Tidak berwarna", cct: "c"},
         {q: "Sifat cahaya pada periskop kapal selam adalah...", a: "Pembiasan", b: "Pemantulan", c: "Penguraian", d: "Penyerapan", cct: "b"},
-        {q: "Bayangan pada cermin datar bersifat...", a: "Terbalik", b: "Sama besar", c: "Lebih kecil", d: "Nyata", cct: "b"},
-        {q: "Lensa mata berfungsi untuk...", a: "Memberi warna mata", b: "Memfokuskan cahaya", c: "Melindungi mata", d: "Menangkap bayangan", cct: "b"},
-        // ... (Tambahkan 30 soal lagi untuk Bab 2)
+        {q: "Bayangan pada cermin datar bersifat...", a: "Terbalik", b: "Sama besar dengan benda", c: "Lebih kecil", d: "Nyata", cct: "b"},
+        {q: "Lensa mata berfungsi untuk...", a: "Memberi warna mata", b: "Memfokuskan cahaya", c: "Melindungi mata", d: "Menangkap suara", cct: "b"},
+        {q: "Benda yang tidak dapat memancarkan cahaya sendiri disebut...", a: "Sumber cahaya", b: "Benda gelap", c: "Benda tak bercahaya", d: "Benda terang", cct: "c"},
+        {q: "Pelangi terbentuk karena...", a: "Pemantulan cahaya", b: "Penguraian cahaya matahari oleh titik air", c: "Penyerapan cahaya", d: "Pemadaman cahaya", cct: "b"},
+        {q: "Cermin cembung digunakan pada...", a: "Lampu senter", b: "Kaca spion kendaraan", c: "Teleskop", d: "Lup", cct: "b"},
+        {q: "Bayangan yang dapat ditangkap oleh layar disebut bayangan...", a: "Maya", b: "Semu", c: "Nyata", d: "Gelap", cct: "c"},
+        {q: "Benda berwarna merah terlihat merah karena...", a: "Menyerap semua warna", b: "Memantulkan cahaya merah", c: "Memancarkan cahaya hijau", d: "Menyerap cahaya merah", cct: "b"},
+        {q: "Retina mata berfungsi untuk...", a: "Memfokuskan cahaya", b: "Menangkap bayangan benda", c: "Melindungi mata", d: "Mengatur cahaya masuk", cct: "b"},
+        {q: "Lensa cembung disebut juga lensa...", a: "Negatif", b: "Positif", c: "Datar", d: "Ganda", cct: "b"},
+        {q: "Kornea mata berfungsi untuk...", a: "Melindungi mata", b: "Meneruskan cahaya", c: "Menghasilkan air mata", d: "Memberi warna mata", cct: "b"},
+        {q: "Cahaya matahari diperlukan tumbuhan untuk...", a: "Bernafas", b: "Fotosintesis", c: "Bergerak", d: "Berkembang biak", cct: "b"},
+        {q: "Alat untuk melihat benda yang sangat jauh adalah...", a: "Mikroskop", b: "Teleskop", c: "Periskop", d: "Lup", cct: "b"},
+        {q: "Warna primer cahaya adalah...", a: "Merah, Kuning, Biru", b: "Merah, Hijau, Biru", c: "Hitam, Putih, Abu", d: "Orange, Ungu, Hijau", cct: "b"},
+        {q: "Iris mata berfungsi untuk...", a: "Menangkap bayangan", b: "Mengatur ukuran pupil", c: "Memfokuskan cahaya", d: "Melindungi lensa", cct: "b"},
+        {q: "Cermin cekung digunakan pada...", a: "Spion motor", b: "Lampu senter", c: "Kacamata", d: "Periskop", cct: "b"},
+        {q: "Pembiasan cahaya terjadi karena...", a: "Cahaya melewati dua medium berbeda", b: "Cahaya menabrak cermin", c: "Cahaya diserap benda", d: "Cahaya berhenti", cct: "a"},
+        {q: "Saraf mata berfungsi untuk...", a: "Menyerap cahaya", b: "Mengirim sinyal ke otak", c: "Memfokuskan bayangan", d: "Melindungi retina", cct: "b"},
+        {q: "Benda hitam bersifat...", a: "Memantulkan semua cahaya", b: "Menyerap semua cahaya", c: "Meneruskan cahaya", d: "Menguraikan cahaya", cct: "b"},
+        {q: "Lensa cekung bersifat...", a: "Mengumpulkan cahaya", b: "Menyebarkan cahaya", c: "Memantulkan cahaya", d: "Menyerap cahaya", cct: "b"},
+        {q: "Alat optik yang menggunakan dua lensa adalah...", a: "Cermin", b: "Teleskop", c: "Senter", d: "Prisma", cct: "b"},
+        {q: "Bayangan maya memiliki sifat...", a: "Dapat ditangkap layar", b: "Tidak dapat ditangkap layar", c: "Terbalik", d: "Diperbesar", cct: "b"},
+        {q: "Kacamata untuk rabun jauh menggunakan lensa...", a: "Cekung", b: "Cembung", c: "Datar", d: "Ganda", cct: "a"},
+        {q: "Prisma dapat menguraikan cahaya putih menjadi...", a: "Hitam", b: "Pelangi", c: "Ungu saja", d: "Merah saja", cct: "b"},
+        {q: "Benda bening contohnya adalah...", a: "Kayu", b: "Kaca", c: "Kertas", d: "Kain", cct: "b"},
+        {q: "Kamera bekerja mirip dengan...", a: "Telinga", b: "Mata", c: "Hidung", d: "Kulit", cct: "b"},
+        {q: "Panjang gelombang cahaya merah lebih...", a: "Pendek dari biru", b: "Panjang dari biru", c: "Sama dengan biru", d: "Tidak ada", cct: "b"},
+        {q: "Aqueous humor adalah cairan yang berada di...", a: "Belakang lensa", b: "Depan lensa mata", c: "Retina", d: "Kornea", cct: "b"},
+        {q: "Orang yang tidak bisa melihat warna disebut...", a: "Rabun", b: "Buta warna", c: "Presbiopi", d: "Katarak", cct: "b"},
+        {q: "Lup digunakan untuk...", a: "Melihat jauh", b: "Memperbesar benda kecil", c: "Melihat dalam air", d: "Menguraikan cahaya", cct: "b"},
+        {q: "Serat optik bekerja berdasarkan prinsip...", a: "Pemantulan sempurna", b: "Pembiasan", c: "Penguraian", d: "Penyerapan", cct: "a"},
+        {q: "Matahari terbit dan terbenam tampak merah karena...", a: "Pembiasan atmosfer", b: "Hamburan cahaya biru", c: "Pemantulan awan", d: "Penyerapan warna", cct: "b"},
+        {q: "Pupil mata akan melebar saat...", a: "Cahaya terang", b: "Cahaya redup", c: "Menutup mata", d: "Tidur", cct: "b"},
 
         // BAB 3: JENIS DAN SUMBER ENERGI (40 SOAL)
         {q: "Sumber energi terbesar bagi bumi adalah...", a: "Listrik", b: "Matahari", c: "Bensin", d: "Angin", cct: "b"},
@@ -91,49 +149,91 @@
         {q: "Kincir angin memanfaatkan energi...", a: "Panas", b: "Kinetik angin", c: "Listrik", d: "Cahaya", cct: "b"},
         {q: "Baterai dan makanan mengandung energi...", a: "Listrik", b: "Kimia", c: "Nuklir", d: "Magnet", cct: "b"},
         {q: "Panel surya mengubah cahaya matahari menjadi...", a: "Gerak", b: "Listrik", c: "Bunyi", d: "Kimia", cct: "b"},
-        {q: "Energi yang tidak akan habis meskipun digunakan terus menerus disebut...", a: "Fosil", b: "Alternatif", c: "Kimia", d: "Nuklir", cct: "b"},
+        {q: "Energi yang tidak akan habis meskipun digunakan terus menerus disebut...", a: "Fosil", b: "Terbarukan", c: "Kimia", d: "Nuklir", cct: "b"},
         {q: "Contoh energi alternatif adalah...", a: "Bensin", b: "Panas Bumi", c: "Batu Bara", d: "Solar", cct: "b"},
         {q: "Alat musik piano mengubah energi gerak menjadi...", a: "Panas", b: "Bunyi", c: "Cahaya", d: "Listrik", cct: "b"},
         {q: "Satuan energi dalam SI adalah...", a: "Watt", b: "Joule", c: "Volt", d: "Ampere", cct: "b"},
-        // ... (Tambahkan 30 soal lagi untuk Bab 3)
+        {q: "Energi potensial adalah energi yang dimiliki benda karena...", a: "Gerakannya", b: "Posisi atau kedudukannya", c: "Panasnya", d: "Warnanya", cct: "b"},
+        {q: "Perubahan energi pada lampu adalah...", a: "Cahaya ke listrik", b: "Listrik ke cahaya dan panas", c: "Panas ke cahaya", d: "Bunyi ke cahaya", cct: "b"},
+        {q: "PLTA memanfaatkan energi...", a: "Angin", b: "Air", c: "Panas bumi", d: "Nuklir", cct: "b"},
+        {q: "Bahan bakar fosil berasal dari...", a: "Tumbuhan masa kini", b: "Makhluk hidup jutaan tahun lalu", c: "Batu-batuan", d: "Air laut", cct: "b"},
+        {q: "Dinamo sepeda mengubah energi gerak menjadi...", a: "Panas", b: "Listrik", c: "Bunyi", d: "Cahaya", cct: "b"},
+        {q: "Contoh perubahan energi kimia menjadi gerak adalah...", a: "Lampu", b: "Mobil", c: "Setrika", d: "Radio", cct: "b"},
+        {q: "Energi panas bumi disebut juga energi...", a: "Solar", b: "Geotermal", c: "Hidro", d: "Angin", cct: "b"},
+        {q: "Turbin angin menghasilkan energi...", a: "Kimia", b: "Listrik", c: "Nuklir", d: "Bunyi", cct: "b"},
+        {q: "Pada kipas angin, energi listrik berubah menjadi energi...", a: "Panas", b: "Gerak", c: "Bunyi", d: "Cahaya", cct: "b"},
+        {q: "Energi yang tersimpan dalam bahan bakar adalah energi...", a: "Kinetik", b: "Kimia", c: "Listrik", d: "Bunyi", cct: "b"},
+        {q: "Fotosintesis mengubah energi cahaya menjadi energi...", a: "Gerak", b: "Kimia dalam makanan", c: "Listrik", d: "Bunyi", cct: "b"},
+        {q: "Hukum kekekalan energi menyatakan bahwa energi tidak dapat...", a: "Berubah bentuk", b: "Diciptakan atau dimusnahkan", c: "Berpindah", d: "Diukur", cct: "b"},
+        {q: "Satuan daya listrik adalah...", a: "Joule", b: "Watt", c: "Newton", d: "Ampere", cct: "b"},
+        {q: "Energi matahari sampai ke bumi melalui...", a: "Kabel", b: "Radiasi", c: "Konduksi", d: "Konveksi", cct: "b"},
+        {q: "Perubahan energi pada radio adalah...", a: "Listrik ke bunyi", b: "Bunyi ke listrik", c: "Panas ke bunyi", d: "Gerak ke bunyi", cct: "a"},
+        {q: "Pembangkit listrik yang menggunakan air terjun adalah...", a: "PLTN", b: "PLTA", c: "PLTU", d: "PLTG", cct: "b"},
+        {q: "Biogas berasal dari...", a: "Minyak bumi", b: "Limbah organik", c: "Batu bara", d: "Uranium", cct: "b"},
+        {q: "Energi nuklir dihasilkan dari...", a: "Pembakaran", b: "Pemecahan inti atom", c: "Air", d: "Angin", cct: "b"},
+        {q: "Contoh alat yang menggunakan energi listrik adalah...", a: "Becak", b: "Televisi", c: "Sepeda", d: "Gerobak", cct: "b"},
+        {q: "Energi bunyi berasal dari...", a: "Cahaya", b: "Getaran", c: "Panas", d: "Listrik", cct: "b"},
+        {q: "Benda yang jatuh dari ketinggian mengalami perubahan energi dari...", a: "Kinetik ke potensial", b: "Potensial ke kinetik", c: "Kimia ke panas", d: "Listrik ke gerak", cct: "b"},
+        {q: "Generator berfungsi mengubah energi...", a: "Listrik ke gerak", b: "Gerak ke listrik", c: "Panas ke listrik", d: "Bunyi ke listrik", cct: "b"},
+        {q: "Keuntungan energi matahari adalah...", a: "Cepat habis", b: "Tidak pernah habis", c: "Mencemari udara", d: "Mahal", cct: "b"},
+        {q: "Pada blender, energi listrik berubah menjadi...", a: "Bunyi", b: "Gerak", c: "Cahaya", d: "Panas", cct: "b"},
+        {q: "Sumber energi tak terbarukan adalah...", a: "Matahari", b: "Minyak bumi", c: "Air", d: "Angin", cct: "b"},
+        {q: "Energi kalor adalah energi...", a: "Gerak", b: "Panas", c: "Bunyi", d: "Cahaya", cct: "b"},
+        {q: "Pada pembangkit listrik tenaga uap, energi panas berubah menjadi...", a: "Cahaya", b: "Gerak turbin", c: "Bunyi", d: "Kimia", cct: "b"},
+        {q: "Mikrohidro adalah pembangkit listrik tenaga air berskala...", a: "Besar", b: "Kecil", c: "Sangat besar", d: "Raksasa", cct: "b"},
+        {q: "Etanol sebagai bahan bakar termasuk energi...", a: "Fosil", b: "Terbarukan", c: "Nuklir", d: "Listrik", cct: "b"},
+        {q: "Perubahan energi saat kita bertepuk tangan adalah energi gerak menjadi...", a: "Cahaya", b: "Bunyi", c: "Listrik", d: "Kimia", cct: "b"},
 
         // BAB 4: PELESTARIAN SUMBER DAYA ALAM (40 SOAL)
         {q: "Sumber daya alam yang tidak dapat diperbarui adalah...", a: "Air", b: "Tumbuhan", c: "Emas", d: "Hewan", cct: "c"},
         {q: "Penanaman kembali hutan yang gundul disebut...", a: "Irigasi", b: "Reboisasi", c: "Erosi", d: "Abrasi", cct: "b"},
-        {q: "Sampah plastik sebaiknya diolah dengan cara...", a: "Dibakar", b: "Didaur ulang", c: "Dibuang ke sungai", d: "Ditimbun", cct: "b"},
+        {q: "Sampah plastik sebaiknya diolah dengan cara...", a: "Dibakar", b: "Didaur ulang", c: "Dibuang ke sungai", d: "Ditimbun saja", cct: "b"},
         {q: "Kegiatan manusia yang merusak keseimbangan alam adalah...", a: "Terasering", b: "Penebangan liar", c: "Pembuatan taman", d: "Mengolah kompos", cct: "b"},
         {q: "Fungsi hutan bakau di pinggir pantai adalah mencegah...", a: "Banjir", b: "Abrasi", c: "Gempa", d: "Longsor", cct: "b"},
         {q: "SDA hayati berasal dari...", a: "Batuan", b: "Makhluk Hidup", c: "Tambang", d: "Matahari", cct: "b"},
         {q: "Tujuan menghemat air adalah...", a: "Agar air cepat habis", b: "Menjaga ketersediaan air", c: "Menambah tagihan", d: "Mencemari lingkungan", cct: "b"},
         {q: "Bahan bakar yang ramah lingkungan adalah...", a: "Bensin", b: "Biodiesel", c: "Batu bara", d: "Minyak tanah", cct: "b"},
         {q: "Bagian tumbuhan yang mencegah erosi tanah adalah...", a: "Bunga", b: "Akar", c: "Buah", d: "Biji", cct: "b"},
-        {q: "Contoh barang yang bisa di-reuse (gunakan kembali) adalah...", a: "Tisu bekas", b: "Botol kaca sirup", c: "Kulit pisang", d: "Kertas terbakar", cct: "b"}
+        {q: "Contoh barang yang bisa di-reuse (gunakan kembali) adalah...", a: "Tisu bekas", b: "Botol kaca", c: "Kulit pisang", d: "Kertas terbakar", cct: "b"},
+        {q: "3R dalam pengelolaan sampah adalah...", a: "Reduce, Reuse, Recycle", b: "Read, Write, Count", c: "Run, Walk, Jump", d: "Red, Green, Blue", cct: "a"},
+        {q: "SDA non hayati contohnya adalah...", a: "Kayu", b: "Batu bara", c: "Karet", d: "Wol", cct: "b"},
+        {q: "Kegiatan menangkap ikan dengan bom dapat merusak...", a: "Gunung", b: "Terumbu karang", c: "Hutan", d: "Udara", cct: "b"},
+        {q: "Contoh kegiatan melestarikan hewan adalah...", a: "Berburu liar", b: "Membuat suaka margasatwa", c: "Membuka hutan", d: "Membuat jalan raya", cct: "b"},
+        {q: "Air tanah berkurang karena...", a: "Banyak pohon", b: "Resapan berkurang", c: "Banyak hujan", d: "Banyak sungai", cct: "b"},
+        {q: "Terasering di sawah berfungsi untuk...", a: "Mempercepat erosi", b: "Mencegah erosi", c: "Menghabiskan air", d: "Membunuh tanaman", cct: "b"},
+        {q: "Hutan tropis Indonesia adalah paru-paru dunia karena menghasilkan...", a: "Karbondioksida", b: "Oksigen", c: "Nitrogen", d: "Metana", cct: "b"},
+        {q: "Pencemaran udara disebabkan oleh...", a: "Tumbuhan", b: "Asap kendaraan", c: "Air bersih", d: "Tanah subur", cct: "b"},
+        {q: "Penggunaan pestisida berlebihan dapat mencemari...", a: "Udara saja", b: "Tanah dan air", c: "Cahaya", d: "Bunyi", cct: "b"},
+        {q: "Kompos dibuat dari...", a: "Plastik", b: "Sampah organik", c: "Kaca", d: "Logam", cct: "b"},
+        {q: "Cagar alam dibuat untuk...", a: "Menebang pohon", b: "Melindungi flora dan fauna", c: "Membuang sampah", d: "Membangun pabrik", cct: "b"},
+        {q: "Dampak penggundulan hutan adalah...", a: "Udara bersih", b: "Banjir dan tanah longsor", c: "Tanah subur", d: "Banyak hujan", cct: "b"},
+        {q: "Salah satu cara mengurangi polusi udara adalah...", a: "Banyak menggunakan kendaraan pribadi", b: "Menggunakan transportasi umum", c: "Membakar sampah", d: "Menebang pohon", cct: "b"},
+        {q: "Pembuatan dam atau waduk bertujuan untuk...", a: "Menghabiskan air", b: "Menampung air", c: "Membunuh ikan", d: "Mencemari sungai", cct: "b"},
+        {q: "Kayu jati dan mahoni termasuk SDA...", a: "Yang tidak dapat diperbarui", b: "Yang dapat diperbarui", c: "Non hayati", d: "Tambang", cct: "b"},
+        {q: "Reduce artinya...", a: "Mendaur ulang", b: "Mengurangi penggunaan", c: "Menggunakan kembali", d: "Membuang", cct: "b"},
+        {q: "Pembakaran hutan menyebabkan...", a: "Udara bersih", b: "Polusi dan kepunahan satwa", c: "Tanah subur", d: "Hujan lebat", cct: "b"},
+        {q: "Taman nasional berfungsi untuk...", a: "Area industri", b: "Konservasi alam", c: "Tempat tinggal", d: "Pertanian", cct: "b"},
+        {q: "Contoh hewan yang dilindungi di Indonesia adalah...", a: "Ayam", b: "Komodo", c: "Bebek", d: "Kambing", cct: "b"},
+        {q: "Limbah pabrik yang dibuang ke sungai menyebabkan...", a: "Air bersih", b: "Pencemaran air", c: "Banyak ikan", d: "Air jernih", cct: "b"},
+        {q: "Pohon di perkotaan berfungsi untuk...", a: "Menambah polusi", b: "Menyerap polusi", c: "Menghasilkan asap", d: "Merusak jalan", cct: "b"},
+        {q: "Gas rumah kaca yang menyebabkan pemanasan global adalah...", a: "Oksigen", b: "Karbondioksida", c: "Nitrogen", d: "Hidrogen", cct: "b"},
+        {q: "Sampah anorganik adalah sampah yang...", a: "Cepat membusuk", b: "Sulit terurai", c: "Dari tumbuhan", d: "Dari hewan", cct: "b"},
+        {q: "Cara menjaga kebersihan sungai adalah...", a: "Membuang sampah ke sungai", b: "Tidak membuang sampah ke sungai", c: "Menambang pasir berlebihan", d: "Membangun pabrik di tepi sungai", cct: "b"},
+        {q: "Perburuan harimau Sumatera secara liar menyebabkan...", a: "Populasi bertambah", b: "Kelestarian terjaga", c: "Kepunahan", d: "Berkembang biak cepat", cct: "c"},
+        {q: "Kegiatan daur ulang kertas bekas membantu...", a: "Merusak hutan", b: "Mengurangi penebangan pohon", c: "Menambah sampah", d: "Mencemari udara", cct: "b"},
+        {q: "Penghijauan di kota bertujuan untuk...", a: "Mengurangi lahan", b: "Menyejukkan udara", c: "Menambah polusi", d: "Merusak trotoar", cct: "b"},
+        {q: "Penggunaan kantong belanja kain dapat...", a: "Menambah sampah plastik", b: "Mengurangi sampah plastik", c: "Merusak lingkungan", d: "Mencemari tanah", cct: "b"},
+        {q: "Energi yang ramah lingkungan adalah...", a: "Batu bara", b: "Energi surya", c: "Bensin", d: "Solar", cct: "b"},
+        {q: "Membuat lubang biopori di halaman berfungsi untuk...", a: "Mengurangi resapan air", b: "Menambah resapan air", c: "Mencemari tanah", d: "Merusak tanaman", cct: "b"}
     ];
-
-    // Untuk demo singkat, saya buat simulasi 160 soal dari bank data ini (logika looping dengan variasi teks)
-    const totalQuestions = [];
-    const chapters = ["Bunyi & Pendengaran", "Cahaya & Penglihatan", "Energi", "Pelestarian SDA"];
-    
-    // Mengenerate 160 soal unik (40 per bab)
-    function generateSoal() {
-        for(let i=0; i<160; i++) {
-            let template = quizData[i % quizData.length];
-            totalQuestions.push({
-                ...template,
-                id: i,
-                q: `[${chapters[Math.floor(i/40)]}] ${template.q} #${i+1}`
-            });
-        }
-    }
 
     let timeLeft = 90 * 60;
     let timerId;
 
     function startQuiz() {
-        const name = document.getElementById('user-name').value;
+        const name = document.getElementById('user-name').value.trim();
         if(!name) return alert("Masukkan namamu dulu!");
         
-        generateSoal();
         document.getElementById('display-name').innerText = name;
         document.getElementById('start-page').classList.add('hidden');
         document.getElementById('quiz-page').classList.remove('hidden');
@@ -144,16 +244,16 @@
 
     function renderQuestions() {
         const container = document.getElementById('questions-container');
-        totalQuestions.forEach((item, idx) => {
+        quizData.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = "quiz-card bg-white p-6 rounded-2xl";
             div.innerHTML = `
-                <p class="font-bold text-gray-700 mb-4">${item.q}</p>
+                <p class="font-bold text-gray-700 mb-4">${idx + 1}. ${item.q}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     ${['a','b','c','d'].map(opt => `
                         <label class="cursor-pointer">
                             <input type="radio" name="q${idx}" value="${opt}" class="option-input hidden">
-                            <div class="option-label border-2 border-gray-100 p-3 rounded-xl transition-all flex items-center">
+                            <div class="option-label border-2 border-gray-100 p-3 rounded-xl transition-all flex items-center hover:border-blue-300">
                                 <span class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full mr-3 text-sm font-bold uppercase">${opt}</span>
                                 ${item[opt]}
                             </div>
@@ -171,23 +271,26 @@
             let m = Math.floor(timeLeft/60);
             let s = timeLeft % 60;
             document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-            if(timeLeft <= 0) calculateResult();
+            if(timeLeft <= 0) {
+                clearInterval(timerId);
+                calculateResult();
+            }
         }, 1000);
     }
 
     function calculateResult() {
         clearInterval(timerId);
         let correct = 0;
-        totalQuestions.forEach((item, idx) => {
+        quizData.forEach((item, idx) => {
             const selected = document.querySelector(`input[name="q${idx}"]:checked`);
             if(selected && selected.value === item.cct) correct++;
         });
 
-        const score = Math.round((correct / 160) * 100);
-        showResult(score);
+        const score = Math.round((correct / quizData.length) * 100);
+        showResult(score, correct);
     }
 
-    function showResult(score) {
+    function showResult(score, correct) {
         document.getElementById('quiz-page').classList.add('hidden');
         document.getElementById('result-page').classList.remove('hidden');
         const scoreElem = document.getElementById('score-text');
@@ -199,12 +302,12 @@
         if(score >= 76) {
             box.style.borderColor = "#22c55e";
             scoreElem.style.color = "#22c55e";
-            feedback.innerHTML = "🎉 <b>LUAR BIASA!</b> Kamu benar-benar pintar. Pertahankan prestasimu!";
+            feedback.innerHTML = `🎉 <b>LUAR BIASA!</b><br>Kamu benar ${correct} dari ${quizData.length} soal!<br>Pertahankan prestasimu!`;
             document.getElementById('audio-win').play();
         } else {
             box.style.borderColor = "#ef4444";
             scoreElem.classList.add('score-bad');
-            feedback.innerHTML = "⚠️ <b>AYO BELAJAR LAGI!</b> Nilaimu masih di bawah KKM. Jangan menyerah ya!";
+            feedback.innerHTML = `⚠️ <b>AYO BELAJAR LAGI!</b><br>Kamu benar ${correct} dari ${quizData.length} soal.<br>Nilaimu masih di bawah KKM. Jangan menyerah ya!`;
             document.getElementById('audio-lose').play();
         }
     }
