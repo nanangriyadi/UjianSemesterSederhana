@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olimpiade Matematika Nalaria - Kelas 4 SD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .transition-all { transition: all 0.3s ease; }
+        .option-input:checked + .option-label {
+            background-color: #eef2ff;
+            border-color: #6366f1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased" oncontextmenu="return false;">
+
+<div id="login-screen" class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl border border-slate-200 text-center transform hover:scale-[1.01] transition-all">
+        <div class="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl font-bold text-indigo-600">Σ</span>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-700 mb-2">Matematika Nalaria</h2>
+        <p class="text-slate-500 mb-8">Evaluasi Logika & Kemampuan Berpikir Kelas 4</p>
+        
+        <input type="text" id="student-name" placeholder="Masukkan Nama Lengkap" 
+            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none mb-4 transition-all">
+        
+        <button onclick="startExam()" 
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-indigo-200 transition-all">
+            Mulai Ujian (120 Soal)
+        </button>
+        <p class="text-xs text-slate-400 mt-6 italic">*Waktu pengerjaan disarankan 90 menit</p>
+    </div>
+</div>
+
+<div id="quiz-area" class="hidden max-w-4xl mx-auto py-10 px-4">
+    <div class="sticky top-4 z-50 bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-200 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h3 id="display-name" class="text-lg font-bold text-indigo-900">Nama Siswa</h3>
+            <p class="text-sm text-slate-500">Sisa Soal: <span id="unanswered-count" class="font-bold text-orange-500">120</span></p>
+        </div>
+        <div id="timer" class="text-2xl font-mono font-bold bg-slate-800 text-white px-6 py-2 rounded-xl border-b-4 border-indigo-500">
+            90:00
+        </div>
+    </div>
+
+    <form id="quiz-form" class="space-y-6">
+        <div id="questions-list" class="space-y-6"></div>
+        
+        <button type="button" onclick="finishExam()" 
+            class="w-full mt-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-xl transform hover:-translate-y-1 transition-all">
+            Selesaikan dan Lihat Skor
+        </button>
+    </form>
+</div>
+
+<div id="result-screen" class="hidden flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white w-full max-w-xl p-10 rounded-3xl shadow-2xl border border-slate-100 text-center">
+        <h2 class="text-2xl font-bold text-slate-700 mb-2">Laporan Hasil Belajar</h2>
+        <div class="relative flex items-center justify-center my-8">
+            <div class="absolute inset-0 bg-indigo-100 rounded-full blur-2xl opacity-50"></div>
+            <h1 id="final-score" class="relative text-8xl font-black text-indigo-600">0</h1>
+        </div>
+        <p id="score-details" class="text-lg text-slate-600 mb-8"></p>
+        
+        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <input type="password" id="admin-pass" placeholder="Password Admin" 
+                class="w-full px-4 py-2 rounded-lg border border-slate-300 mb-4 focus:ring-2 focus:ring-red-400 outline-none">
+            <button onclick="adminReset()" 
+                class="w-full bg-slate-800 hover:bg-black text-white py-2 rounded-lg transition-all font-medium">
+                Reset Ujian
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ADMIN_PASSWORD = "admin123";
+    let timeLeft = 90 * 60;
+    let timerInterval;
+
+    // Generate 120 Nalaria Questions
+    const questions = [];
+    
+    // Helper function to generate questions
+    function generateDatabase() {
+        const pool = [
+            { q: "Andi memiliki 5 apel. Budi memberikan 3 kali lipat dari jumlah apel Andi. Berapa total apel mereka?", a: "15", b: "20", c: "25", d: "10", correct: "b" },
+            { q: "Suatu bilangan jika dikalikan 4 lalu ditambah 10 hasilnya 50. Bilangan itu adalah...", a: "5", b: "10", c: "15", d: "20", correct: "b" },
+            { q: "Sebuah jam menunjukkan pukul 03.15. Berapa derajat sudut terkecil yang terbentuk?", a: "7.5°", b: "15°", c: "0°", d: "52.5°", correct: "a" },
+            { q: "Dalam sebuah barisan, Budi adalah urutan ke-7 dari depan dan ke-12 dari belakang. Berapa jumlah orang di barisan?", a: "18", b: "19", c: "20", d: "17", correct: "a" },
+            { q: "Jika hari ini adalah Senin, maka 100 hari lagi adalah hari...", a: "Selasa", b: "Rabu", c: "Kamis", d: "Jumat", correct: "a" },
+            { q: "Setengah dari sebuah bilangan adalah 12. Berapa sepertiga dari bilangan tersebut?", a: "4", b: "6", c: "8", d: "10", correct: "c" },
+            { q: "Berapa banyak persegi pada papan catur berukuran 3x3?", a: "9", b: "10", c: "14", d: "13", correct: "c" },
+            { q: "Ibu membeli 2 kg telur. 1 kg berisi 16 butir. Jika 4 butir pecah, berapa butir yang tersisa?", a: "32", b: "28", c: "12", d: "24", correct: "b" },
+            { q: "Sebuah persegi panjang memiliki keliling 20 cm. Jika lebarnya 4 cm, berapakah luasnya?", a: "16 cm²", b: "24 cm²", c: "32 cm²", d: "20 cm²", correct: "b" },
+            { q: "Lanjutkan pola ini: 2, 6, 12, 20, ...", a: "28", b: "30", c: "32", d: "24", correct: "b" }
+        ];
+
+        // Fill up to 120 by variation for demo purposes
+        for (let i = 0; i < 120; i++) {
+            let template = pool[i % pool.length];
+            questions.push({
+                q: `[Soal ${i+1}] ` + template.q,
+                a: template.a,
+                b: template.b,
+                c: template.c,
+                d: template.d,
+                correct: template.correct
+            });
+        }
+    }
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function startExam() {
+        const name = document.getElementById('student-name').value;
+        if (!name) return alert("Silakan masukkan nama Anda!");
+        
+        generateDatabase();
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
+        
+        renderQuestions();
+        startTimer();
+    }
+
+    function renderQuestions() {
+        const list = document.getElementById('questions-list');
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-all";
+            card.innerHTML = `
+                <p class="text-lg font-semibold text-slate-700 mb-4 leading-relaxed">${item.q}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    ${['a', 'b', 'c', 'd'].map(opt => `
+                        <label class="relative flex items-center group cursor-pointer">
+                            <input type="radio" name="q${index}" value="${opt}" onchange="updateCounter()" class="option-input hidden">
+                            <div class="option-label w-full p-4 rounded-xl border-2 border-slate-100 bg-slate-50 group-hover:bg-slate-100 transition-all text-slate-600 font-medium flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-white border border-slate-300 flex items-center justify-center mr-3 text-xs font-bold uppercase">${opt}</span>
+                                ${item[opt]}
+                            </div>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            list.appendChild(card);
+        });
+        updateCounter();
+    }
+
+    function updateCounter() {
+        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        document.getElementById('unanswered-count').innerText = questions.length - answered;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) { clearInterval(timerInterval); finishExam(); }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function finishExam() {
+        if (timeLeft > 0) {
+            if (!confirm("Anda yakin ingin mengakhiri ujian? Pastikan semua soal terjawab.")) return;
+        }
+        clearInterval(timerInterval);
+        let correct = 0;
+        questions.forEach((item, index) => {
+            const sel = document.querySelector(`input[name="q${index}"]:checked`);
+            if (sel && sel.value === item.correct) correct++;
+        });
+        
+        const score = Math.round((correct / questions.length) * 100);
+        document.getElementById('quiz-area').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+        
+        let pesan = score >= 75 ? "Luar biasa! Kemampuan nalariyah kamu sangat tajam." : "Bagus! Teruslah berlatih soal logika setiap hari.";
+        document.getElementById('score-details').innerHTML = `<strong>${document.getElementById('student-name').value}</strong>, kamu berhasil menjawab benar <strong>${correct}</strong> dari ${questions.length} soal.<br><span class='text-sm mt-2 block'>${pesan}</span>`;
+    }
+
+    function adminReset() {
+        if (document.getElementById('admin-pass').value === ADMIN_PASSWORD) {
+            location.reload();
+        } else {
+            alert("Sandi admin salah!");
+        }
+    }
+</script>
+</body>
+</html>
