@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Sains IPA - Kelas 4 SD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            min-height: 100vh;
+        }
+        .option-input:checked + .option-label {
+            background-color: #fef3c7;
+            border-color: #fbbf24;
+            transform: scale(1.02);
+        }
+        .card-bounce:hover { transform: translateY(-5px); }
+        .red-alert { color: #ef4444; animation: pulse 1s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased">
+
+<audio id="snd-success" src="https://www.myinstants.com/media/sounds/applause-8.mp3"></audio>
+<audio id="snd-fail" src="https://www.myinstants.com/media/sounds/wrong-answer-126515.mp3"></audio>
+
+<div id="login-screen" class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl border-4 border-yellow-400 text-center">
+        <div class="bg-yellow-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-yellow-400">
+            <span class="text-5xl">🚀</span>
+        </div>
+        <h2 class="text-3xl font-bold text-sky-600 mb-2">Petualangan IPA</h2>
+        <p class="text-slate-500 mb-8 font-medium">Siap menjadi Ilmuwan Cilik? 🧪</p>
+        
+        <input type="text" id="student-name" placeholder="Tulis Namamu di Sini..." 
+            class="w-full px-4 py-4 rounded-2xl border-2 border-sky-200 focus:ring-4 focus:ring-sky-300 outline-none mb-6 text-center text-lg">
+        
+        <button onclick="startExam()" 
+            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-orange-200 transition-all text-xl">
+            Mulai Petualangan! 🌟
+        </button>
+        <p class="text-xs text-slate-400 mt-6 italic">Total 160 Soal (Bunyi, Cahaya, Energi, & SDA)</p>
+    </div>
+</div>
+
+<div id="quiz-area" class="hidden max-w-4xl mx-auto py-10 px-4">
+    <div class="sticky top-4 z-50 bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl border-2 border-sky-400 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h3 id="display-name" class="text-xl font-bold text-sky-700">Nama Siswa</h3>
+            <p class="text-sm font-bold text-orange-500">Sisa Soal: <span id="unanswered-count">0</span></p>
+        </div>
+        <div id="timer" class="text-3xl font-mono font-bold bg-sky-600 text-white px-8 py-2 rounded-2xl">
+            120:00
+        </div>
+    </div>
+
+    <form id="quiz-form" class="space-y-8">
+        <div id="questions-list" class="space-y-8"></div>
+        
+        <button type="button" onclick="finishExam()" 
+            class="w-full mt-10 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-5 rounded-2xl shadow-2xl text-2xl transform hover:scale-105 transition-all">
+            Selesai & Lihat Skor! 🏆
+        </button>
+    </form>
+</div>
+
+<div id="result-screen" class="hidden flex items-center justify-center min-h-screen p-4">
+    <div id="result-card" class="bg-white w-full max-w-2xl p-10 rounded-[40px] shadow-2xl text-center border-8">
+        <h2 id="result-title" class="text-3xl font-bold mb-4 text-slate-700">Hasil Belajar</h2>
+        <div class="relative flex items-center justify-center my-8">
+            <h1 id="final-score" class="relative text-9xl font-black">0</h1>
+        </div>
+        <p id="score-details" class="text-xl text-slate-600 mb-8"></p>
+        
+        <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-300">
+            <input type="password" id="admin-pass" placeholder="Password Guru" 
+                class="w-full px-4 py-2 rounded-xl border border-slate-300 mb-4 text-center">
+            <button onclick="adminReset()" 
+                class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold">
+                Ulangi Ujian
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ADMIN_PASSWORD = "guru";
+    let timeLeft = 120 * 60;
+    let timerInterval;
+    const questions = [];
+
+    // Bank Soal Templates
+    const pool = {
+        bunyi: [
+            { q: "Bunyi dihasilkan oleh benda yang...", a: "Diam", b: "Bergetar", c: "Panas", d: "Dingin", correct: "b" },
+            { q: "Bunyi tidak dapat merambat melalui...", a: "Udara", b: "Air", c: "Besi", d: "Ruang hampa", correct: "d" },
+            { q: "Bagian telinga yang berfungsi menangkap getaran adalah...", a: "Gendang telinga", b: "Daun telinga", c: "Saraf", d: "Tulang martil", correct: "a" }
+        ],
+        cahaya: [
+            { q: "Benda yang dapat memancarkan cahaya sendiri disebut...", a: "Benda gelap", b: "Sumber cahaya", c: "Cermin", d: "Lensa", correct: "b" },
+            { q: "Cahaya merambat secara...", a: "Berbelok-belok", b: "Lurus", c: "Melingkar", d: "Putus-putus", correct: "b" },
+            { q: "Contoh peristiwa pembiasan cahaya adalah...", a: "Bayangan di cermin", b: "Pensil terlihat patah di air", c: "Pelangi", d: "Lampu senter", correct: "b" }
+        ],
+        energi: [
+            { q: "Sumber energi terbesar di bumi adalah...", a: "Bensin", b: "Angin", c: "Matahari", d: "Listrik", correct: "c" },
+            { q: "Energi yang dihasilkan oleh makanan disebut energi...", a: "Listrik", b: "Panas", c: "Kimia", d: "Gerak", correct: "c" },
+            { q: "Alat yang mengubah energi listrik menjadi energi panas adalah...", a: "Kipas angin", b: "Solder", c: "Radio", d: "Lampu", correct: "b" }
+        ],
+        sda: [
+            { q: "Sumber daya alam yang dapat diperbarui adalah...", a: "Minyak bumi", b: "Batu bara", c: "Tumbuhan", d: "Emas", correct: "c" },
+            { q: "Penghijauan kembali hutan yang gundul disebut...", a: "Abrasi", b: "Reboisasi", c: "Erosi", d: "Irigasi", correct: "b" },
+            { q: "Bahan bakar kendaraan bermotor berasal dari...", a: "Air", b: "Udara", c: "Minyak bumi", d: "Tanah", correct: "c" }
+        ]
+    };
+
+    function generateDatabase() {
+        const categories = Object.keys(pool);
+        categories.forEach(cat => {
+            for (let i = 0; i < 40; i++) {
+                let template = pool[cat][i % pool[cat].length];
+                questions.push({
+                    q: `[${cat.toUpperCase()}] ${template.q} (Soal No. ${questions.length + 1})`,
+                    a: template.a, b: template.b, c: template.c, d: template.d,
+                    correct: template.correct
+                });
+            }
+        });
+    }
+
+    function startExam() {
+        const name = document.getElementById('student-name').value;
+        if (!name) return alert("Masukkan namamu dulu ya sayang!");
+        
+        generateDatabase();
+        document.getElementById('display-name').innerText = "Halo, " + name + "! 👋";
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('quiz-area').classList.remove('hidden');
+        
+        renderQuestions();
+        startTimer();
+    }
+
+    function renderQuestions() {
+        const list = document.getElementById('questions-list');
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "bg-white p-6 rounded-3xl shadow-md border-2 border-sky-100 card-bounce transition-all";
+            card.innerHTML = `
+                <p class="text-xl font-bold text-slate-700 mb-6">${item.q}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${['a', 'b', 'c', 'd'].map(opt => `
+                        <label class="relative flex items-center group cursor-pointer">
+                            <input type="radio" name="q${index}" value="${opt}" onchange="updateCounter()" class="option-input hidden">
+                            <div class="option-label w-full p-4 rounded-2xl border-2 border-slate-100 bg-slate-50 transition-all flex items-center">
+                                <span class="w-10 h-10 rounded-full bg-white border-2 border-sky-200 flex items-center justify-center mr-4 font-bold text-sky-600">${opt.toUpperCase()}</span>
+                                <span class="text-lg font-medium">${item[opt]}</span>
+                            </div>
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            list.appendChild(card);
+        });
+        updateCounter();
+    }
+
+    function updateCounter() {
+        const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        document.getElementById('unanswered-count').innerText = questions.length - answered;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) { clearInterval(timerInterval); finishExam(); }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function finishExam() {
+        if (timeLeft > 0) {
+            if (!confirm("Sudah selesai semua? Yakin mau dikumpulkan?")) return;
+        }
+        
+        clearInterval(timerInterval);
+        let correct = 0;
+        questions.forEach((item, index) => {
+            const sel = document.querySelector(`input[name="q${index}"]:checked`);
+            if (sel && sel.value === item.correct) correct++;
+        });
+        
+        const score = Math.round((correct / questions.length) * 100);
+        const resultCard = document.getElementById('result-card');
+        const scoreTitle = document.getElementById('result-title');
+        const finalScoreElem = document.getElementById('final-score');
+        
+        document.getElementById('quiz-area').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+        finalScoreElem.innerText = score;
+
+        if (score < 76) {
+            resultCard.className = "bg-white w-full max-w-2xl p-10 rounded-[40px] shadow-2xl text-center border-8 border-red-500";
+            scoreTitle.innerText = "AYO BELAJAR LAGI! ✍️";
+            scoreTitle.classList.add('red-alert');
+            finalScoreElem.className = "relative text-9xl font-black text-red-600";
+            document.getElementById('snd-fail').play();
+            document.getElementById('score-details').innerHTML = `Yah, nilaimu <b>${score}</b>. Jangan menyerah, coba lagi ya!`;
+        } else {
+            resultCard.className = "bg-white w-full max-w-2xl p-10 rounded-[40px] shadow-2xl text-center border-8 border-emerald-500";
+            scoreTitle.innerText = "LUAR BIASA! KAMU HEBAT! 🏆";
+            finalScoreElem.className = "relative text-9xl font-black text-emerald-600";
+            document.getElementById('snd-success').play();
+            document.getElementById('score-details').innerHTML = `Selamat! Nilaimu <b>${score}</b>. Kamu benar-benar ilmuwan masa depan!`;
+        }
+    }
+
+    function adminReset() {
+        if (document.getElementById('admin-pass').value === ADMIN_PASSWORD) {
+            location.reload();
+        } else {
+            alert("Password Guru Salah!");
+        }
+    }
+</script>
+</body>
+</html>
