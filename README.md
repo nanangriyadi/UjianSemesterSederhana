@@ -5,3 +5,4 @@ Tema: Bunyi dan Indera Pendengaran
 Evaluasi Logika & Kemampuan Berpikir Kelas 4
 3. Quiz IPA Seru! link : https://nanangriyadi.github.io/UjianSemesterSederhana/index3.html
 Selesaikan 160 tantangan untuk menjadi juara!
+4. Quiz Coding pemula link : https://nanangriyadi.github.io/UjianSemesterSederhana/coding.html
