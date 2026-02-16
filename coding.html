@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 Ujian Coding Kelas 4 SD</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Nunito', sans-serif; }
+  .title-font { font-family: 'Fredoka One', cursive; }
+
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 60%, #f5576c 100%);
+    min-height: 100vh;
+    background-attachment: fixed;
+  }
+
+  /* Floating bubbles background */
+  .bubble {
+    position: fixed;
+    border-radius: 50%;
+    opacity: 0.08;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.08; }
+    90% { opacity: 0.08; }
+    100% { transform: translateY(-200px) scale(1); opacity: 0; }
+  }
+
+  /* Login screen */
+  .login-card {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255,255,255,0.8);
+    animation: popIn .7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { opacity:0; transform: scale(0.7) translateY(30px); }
+    to { opacity:1; transform: scale(1) translateY(0); }
+  }
+
+  /* Option labels */
+  .option-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+  .option-input { display: none; }
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 2.5px solid #e2e8f0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+  }
+  .option-label:hover {
+    border-color: #818cf8;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: -4px 0 0 #818cf8, 0 4px 15px rgba(129,140,248,0.3);
+  }
+  .option-input:checked + .option-label {
+    border-color: #4f46e5;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    transform: translateX(6px) scale(1.02);
+    box-shadow: -4px 0 0 #312e81, 0 8px 25px rgba(79,70,229,0.5);
+  }
+  .option-letter {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+    background: rgba(79,70,229,0.15);
+    color: #4f46e5;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .option-input:checked + .option-label .option-letter {
+    background: rgba(255,255,255,0.25);
+    color: white;
+  }
+
+  /* Question card */
+  .question-card {
+    background: white;
+    border-radius: 24px;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    animation: slideIn .5s ease forwards;
+    opacity: 0;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(20px); }
+    to { opacity:1; transform: none; }
+  }
+  .question-card:hover {
+    box-shadow: 0 12px 40px rgba(79,70,229,0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Category badge */
+  .cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Timer */
+  .timer-box {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border: 2px solid rgba(165,180,252,0.3);
+    box-shadow: 0 0 20px rgba(99,102,241,0.4);
+  }
+  .timer-box.urgent {
+    animation: pulse-urgent 0.5s ease infinite alternate;
+    background: linear-gradient(135deg, #7f1d1d, #991b1b);
+  }
+  @keyframes pulse-urgent {
+    from { box-shadow: 0 0 15px rgba(239,68,68,0.5); }
+    to { box-shadow: 0 0 35px rgba(239,68,68,0.9); }
+  }
+
+  /* Progress bar */
+  .progress-fill {
+    background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+    transition: width 0.5s ease;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Emoji illustration */
+  .emoji-illus {
+    font-size: 60px;
+    animation: bounce-emoji 2s ease infinite;
+  }
+  @keyframes bounce-emoji {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+  }
+
+  /* Result screen */
+  .result-card {
+    background: white;
+    border-radius: 32px;
+    animation: popIn .8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .score-ring {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Review section */
+  .review-correct {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border: 2px solid #10b981;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .review-wrong {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 2px solid #ef4444;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .explanation-box {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 10px;
+  }
+  .example-box {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+
+  /* Floating emoji decorations */
+  .float-deco {
+    position: fixed;
+    font-size: 28px;
+    opacity: 0.15;
+    animation: floatDeco linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes floatDeco {
+    0% { transform: translateY(100vh) rotate(0deg); }
+    100% { transform: translateY(-150px) rotate(720deg); }
+  }
+
+  /* Start button */
+  .start-btn {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .start-btn:hover {
+    transform: scale(1.05) translateY(-3px);
+    box-shadow: 0 15px 35px rgba(79,70,229,0.5);
+  }
+
+  /* Code inline */
+  code {
+    background: #1e1b4b;
+    color: #a5f3fc;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+  ::-webkit-scrollbar-thumb { background: rgba(79,70,229,0.5); border-radius: 4px; }
+
+  /* Mascot */
+  .mascot { animation: mascot-idle 3s ease-in-out infinite; }
+  @keyframes mascot-idle {
+    0%, 100% { transform: rotate(-5deg) translateY(0); }
+    50% { transform: rotate(5deg) translateY(-8px); }
+  }
+
+  /* Category colors */
+  .cat-basic { background: #dbeafe; color: #1e40af; }
+  .cat-internet { background: #d1fae5; color: #065f46; }
+  .cat-hardware { background: #fce7f3; color: #9d174d; }
+  .cat-software { background: #ede9fe; color: #5b21b6; }
+  .cat-algorithm { background: #fef3c7; color: #92400e; }
+  .cat-safety { background: #fee2e2; color: #991b1b; }
+  .cat-scratch { background: #e0f2fe; color: #0c4a6e; }
+  .cat-data { background: #f0fdf4; color: #14532d; }
+
+  .hidden { display: none !important; }
+
+  /* Finish button */
+  .finish-btn {
+    background: linear-gradient(135deg, #059669, #10b981);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .finish-btn:hover {
+    transform: scale(1.03) translateY(-2px);
+    box-shadow: 0 15px 35px rgba(16,185,129,0.4);
+  }
+
+  /* Avatar selector */
+  .avatar-btn {
+    font-size: 36px;
+    padding: 12px;
+    border-radius: 16px;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f1f5f9;
+  }
+  .avatar-btn:hover { transform: scale(1.2); border-color: #818cf8; }
+  .avatar-btn.selected { border-color: #4f46e5; background: #eef2ff; transform: scale(1.15); }
+</style>
+</head>
+
+<body class="text-slate-800 antialiased" oncontextmenu="return false;">
+
+<!-- Floating decorations -->
+<div class="float-deco" style="left:5%;animation-duration:12s;animation-delay:0s;">💻</div>
+<div class="float-deco" style="left:15%;animation-duration:15s;animation-delay:3s;">🤖</div>
+<div class="float-deco" style="left:25%;animation-duration:10s;animation-delay:6s;">⌨️</div>
+<div class="float-deco" style="left:40%;animation-duration:18s;animation-delay:1s;">🖱️</div>
+<div class="float-deco" style="left:60%;animation-duration:13s;animation-delay:4s;">🚀</div>
+<div class="float-deco" style="left:75%;animation-duration:16s;animation-delay:7s;">⭐</div>
+<div class="float-deco" style="left:85%;animation-duration:11s;animation-delay:2s;">🎮</div>
+<div class="float-deco" style="left:92%;animation-duration:14s;animation-delay:5s;">📱</div>
+
+<!-- ======== LOGIN SCREEN ======== -->
+<div id="login-screen" class="flex items-center justify-center min-h-screen p-4 relative z-10">
+  <div class="login-card w-full max-w-lg p-10 rounded-3xl shadow-2xl text-center">
+
+    <div class="mascot text-8xl mb-4">🤖</div>
+    <h1 class="title-font text-4xl text-indigo-700 mb-1">Koding Seru!</h1>
+    <p class="text-slate-500 mb-2 font-semibold">Ujian Pengantar Coding — Kelas 4 SD</p>
+    <div class="flex justify-center gap-2 mb-6">
+      <span class="cat-badge cat-basic">160 Soal</span>
+      <span class="cat-badge cat-internet">45 Menit</span>
+      <span class="cat-badge cat-scratch">Pemula</span>
+    </div>
+
+    <!-- Avatar selector -->
+    <p class="text-sm font-bold text-slate-600 mb-3">Pilih Avatarmu:</p>
+    <div class="flex justify-center gap-3 mb-6 flex-wrap" id="avatar-selector">
+      <button class="avatar-btn selected" onclick="selectAvatar(this,'🧑‍💻')">🧑‍💻</button>
+      <button class="avatar-btn" onclick="selectAvatar(this,'👩‍💻')">👩‍💻</button>
+      <button class="avatar-btn" onclick="selectAvatar(this,'🦸')">🦸</button>
+      <button class="avatar-btn" onclick="selectAvatar(this,'🦄')">🦄</button>
+      <button class="avatar-btn" onclick="selectAvatar(this,'🐱')">🐱</button>
+      <button class="avatar-btn" onclick="selectAvatar(this,'🐸')">🐸</button>
+    </div>
+
+    <input id="student-name" placeholder="✏️ Tulis Nama Lengkapmu"
+      class="w-full px-5 py-4 border-2 border-indigo-200 rounded-2xl mb-4 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 outline-none text-lg font-semibold text-center"
+      onkeydown="if(event.key==='Enter') startExam()">
+
+    <button onclick="startExam()"
+      class="start-btn w-full text-white py-4 rounded-2xl font-black text-xl shadow-xl mb-4">
+      🚀 Mulai Petualangan Coding!
+    </button>
+
+    <div class="grid grid-cols-4 gap-3 mt-4">
+      <div class="bg-indigo-50 p-3 rounded-2xl text-center">
+        <div class="text-2xl">💡</div>
+        <p class="text-xs font-bold text-indigo-600 mt-1">Dasar</p>
+      </div>
+      <div class="bg-green-50 p-3 rounded-2xl text-center">
+        <div class="text-2xl">🌐</div>
+        <p class="text-xs font-bold text-green-600 mt-1">Internet</p>
+      </div>
+      <div class="bg-purple-50 p-3 rounded-2xl text-center">
+        <div class="text-2xl">🤖</div>
+        <p class="text-xs font-bold text-purple-600 mt-1">Algoritma</p>
+      </div>
+      <div class="bg-pink-50 p-3 rounded-2xl text-center">
+        <div class="text-2xl">🛡️</div>
+        <p class="text-xs font-bold text-pink-600 mt-1">Keamanan</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== QUIZ AREA ======== -->
+<div id="quiz-area" class="hidden max-w-4xl mx-auto py-6 px-4 relative z-10">
+
+  <!-- STICKY HEADER -->
+  <div class="sticky top-3 z-40 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl mb-6 border border-indigo-100">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div id="header-avatar" class="text-3xl">🧑‍💻</div>
+        <div>
+          <h3 id="display-name" class="font-black text-indigo-700 text-lg"></h3>
+          <p class="text-sm text-slate-500">
+            Belum dijawab: <span id="unanswered-count" class="font-black text-orange-500">160</span>
+          </p>
+        </div>
+      </div>
+      <div id="timer" class="timer-box text-white px-5 py-2 rounded-xl font-mono text-2xl font-black shadow-lg">
+        45:00
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="mt-3">
+      <div class="flex justify-between text-xs font-bold mb-1 text-slate-600">
+        <span>⚡ Progress</span>
+        <span id="progress-text">0 / 160</span>
+      </div>
+      <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden border border-slate-200">
+        <div id="progress-bar" class="progress-fill h-4 w-0 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <form id="quiz-form" class="space-y-5">
+    <div id="questions-list" class="space-y-5"></div>
+
+    <button type="button" onclick="finishExam()"
+      class="finish-btn w-full text-white py-5 rounded-2xl font-black text-xl shadow-xl mt-8">
+      ✅ Selesai & Lihat Nilai!
+    </button>
+  </form>
+</div>
+
+<!-- ======== RESULT SCREEN ======== -->
+<div id="result-screen" class="hidden relative z-10 py-8 px-4">
+  <div class="max-w-4xl mx-auto">
+
+    <!-- Score card -->
+    <div class="result-card p-8 mb-6 shadow-2xl text-center">
+      <div id="result-avatar" class="text-6xl mb-3">🧑‍💻</div>
+      <h2 class="title-font text-3xl text-indigo-700 mb-1">Hasil Ujianmu!</h2>
+      <p id="result-name" class="text-slate-500 font-semibold mb-6"></p>
+
+      <div id="score-ring" class="score-ring mb-6">
+        <!-- SVG ring injected by JS -->
+      </div>
+
+      <h1 id="final-score" class="text-8xl font-black text-indigo-600 mb-2">0</h1>
+      <p id="score-grade" class="text-2xl font-black mb-2"></p>
+      <p id="score-details" class="text-slate-500 font-semibold mb-6"></p>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-4">
+          <div class="text-3xl font-black text-green-600" id="stat-correct">0</div>
+          <p class="text-xs font-bold text-green-700 mt-1">✅ Benar</p>
+        </div>
+        <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-4">
+          <div class="text-3xl font-black text-red-600" id="stat-wrong">0</div>
+          <p class="text-xs font-bold text-red-700 mt-1">❌ Salah</p>
+        </div>
+        <div class="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4">
+          <div class="text-3xl font-black text-yellow-600" id="stat-skip">0</div>
+          <p class="text-xs font-bold text-yellow-700 mt-1">⏭️ Dilewati</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3 justify-center">
+        <button onclick="showReview()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all hover:scale-105">
+          📖 Lihat Pembahasan
+        </button>
+        <div>
+          <input id="admin-pass" type="password" placeholder="🔑 Password"
+            class="px-4 py-3 border-2 rounded-xl border-slate-200 font-semibold" style="width:140px">
+          <button onclick="adminReset()"
+            class="ml-2 bg-slate-700 hover:bg-slate-900 text-white px-4 py-3 rounded-xl font-bold transition-all hover:scale-105">
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEW SECTION -->
+    <div id="review-section" class="hidden">
+      <div class="bg-white/95 backdrop-blur rounded-3xl p-6 shadow-2xl">
+        <h3 class="title-font text-3xl text-indigo-700 mb-6 text-center">📚 Pembahasan Lengkap</h3>
+        <div id="review-list" class="space-y-4"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ======== CONFIG ========
+const ADMIN_PASSWORD = "admin123";
+let timeLeft = 45 * 60;
+let timerInterval;
+let selectedAvatar = '🧑‍💻';
+let userAnswers = {};
+
+// ======== 160 QUESTIONS ========
+const questions = [
+  // === KATEGORI 1: PENGENALAN KOMPUTER & PERANGKAT (soal 1-20) ===
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🖥️",
+    q: "Komputer adalah alat yang digunakan untuk...",
+    a: "Memasak makanan", b: "Mengolah data dan informasi",
+    c: "Menanam tanaman", d: "Membuat pakaian",
+    correct: "b",
+    explain: "Komputer adalah mesin elektronik yang bisa menerima, mengolah, menyimpan, dan menampilkan data atau informasi.",
+    example: "Contoh: Ketika kamu mengetik nama di komputer, komputer mengolah huruf-huruf itu lalu menampilkannya di layar!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🖱️",
+    q: "Alat yang digunakan untuk menggerakkan kursor di layar komputer disebut...",
+    a: "Keyboard", b: "Monitor", c: "Mouse", d: "Speaker",
+    correct: "c",
+    explain: "Mouse adalah perangkat input yang digunakan untuk mengarahkan dan memindahkan kursor di layar komputer.",
+    example: "Contoh: Kamu mengklik ikon game dengan mouse → kursor bergerak ke ikon → game terbuka!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "⌨️",
+    q: "Perangkat yang digunakan untuk mengetik huruf dan angka adalah...",
+    a: "Printer", b: "Keyboard", c: "Scanner", d: "Webcam",
+    correct: "b",
+    explain: "Keyboard adalah perangkat input yang memiliki tombol-tombol huruf, angka, dan simbol untuk memasukkan teks ke komputer.",
+    example: "Contoh: Kamu mengetik kata 'HALO' di keyboard → huruf H-A-L-O muncul di layar!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🖨️",
+    q: "Alat yang digunakan untuk mencetak dokumen dari komputer ke kertas disebut...",
+    a: "Monitor", b: "Keyboard", c: "Mouse", d: "Printer",
+    correct: "d",
+    explain: "Printer adalah perangkat output yang menghasilkan cetakan dari data digital komputer ke media fisik seperti kertas.",
+    example: "Contoh: Kamu membuat gambar di komputer → tekan print → printer mencetak gambar di kertas!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🖥️",
+    q: "Layar yang menampilkan gambar dan teks dari komputer disebut...",
+    a: "CPU", b: "RAM", c: "Monitor", d: "Hard disk",
+    correct: "c",
+    explain: "Monitor adalah perangkat output yang menampilkan informasi secara visual. Tanpa monitor, kamu tidak bisa melihat apa yang dikerjakan komputer.",
+    example: "Contoh: Saat kamu menonton video YouTube, layar monitor itulah yang menampilkan videonya untukmu!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🔌",
+    q: "CPU adalah singkatan dari...",
+    a: "Computer Power Unit", b: "Central Processing Unit",
+    c: "Computer Program Update", d: "Central Power Unit",
+    correct: "b",
+    explain: "CPU (Central Processing Unit) adalah otak dari komputer yang memproses semua instruksi dan perhitungan.",
+    example: "Contoh: Ketika kamu menjumlahkan angka di kalkulator komputer, CPU-lah yang menghitung hasilnya!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "💾",
+    q: "Tempat penyimpanan data sementara yang hilang jika komputer dimatikan disebut...",
+    a: "Hard Disk", b: "CD-ROM", c: "RAM", d: "Flash Disk",
+    correct: "c",
+    explain: "RAM (Random Access Memory) adalah memori sementara. Data di RAM akan hilang saat komputer dimatikan atau restart.",
+    example: "Contoh: Kamu mengetik tugas tapi belum disimpan → listrik mati → tulisanmu hilang karena hanya ada di RAM!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "📦",
+    q: "Tempat penyimpanan data permanen di dalam komputer disebut...",
+    a: "RAM", b: "Hard Disk", c: "Monitor", d: "CPU",
+    correct: "b",
+    explain: "Hard Disk (HDD/SSD) adalah tempat penyimpanan permanen. Data tidak hilang meski komputer dimatikan.",
+    example: "Contoh: Game yang kamu install tersimpan di hard disk → besok menyalakan komputer lagi → game masih ada!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🔊",
+    q: "Speaker pada komputer adalah perangkat...",
+    a: "Input", b: "Proses", c: "Output", d: "Penyimpanan",
+    correct: "c",
+    explain: "Speaker adalah perangkat output karena menghasilkan suara yang keluar dari komputer untuk didengar pengguna.",
+    example: "Contoh: Kamu memutar lagu → data audio diproses CPU → speaker mengeluarkan suara musik!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "📷",
+    q: "Webcam adalah perangkat yang berfungsi untuk...",
+    a: "Mencetak foto", b: "Merekam dan mengambil gambar video",
+    c: "Menyimpan file", d: "Menghubungkan ke internet",
+    correct: "b",
+    explain: "Webcam adalah kamera kecil yang terhubung ke komputer, digunakan untuk video call atau merekam video.",
+    example: "Contoh: Saat kamu video call dengan nenek menggunakan Zoom, webcam yang menangkap wajahmu!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "💡",
+    q: "Perangkat keras (hardware) komputer adalah...",
+    a: "Program yang bisa dijalankan", b: "Bagian fisik komputer yang bisa disentuh",
+    c: "Aplikasi di internet", d: "Data yang tersimpan",
+    correct: "b",
+    explain: "Hardware adalah komponen fisik komputer yang bisa kamu lihat dan sentuh, seperti keyboard, mouse, monitor, dan CPU.",
+    example: "Contoh hardware: 🖥️ Monitor, ⌨️ Keyboard, 🖱️ Mouse, 🖨️ Printer — semuanya bisa kamu pegang!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "📱",
+    q: "Tablet, smartphone, dan laptop termasuk jenis...",
+    a: "Makanan", b: "Komputer", c: "Mainan", d: "Alat masak",
+    correct: "b",
+    explain: "Tablet, smartphone, dan laptop semuanya adalah jenis komputer dengan berbagai ukuran dan kegunaan.",
+    example: "Contoh: iPad = tablet komputer, iPhone = komputer saku (smartphone), MacBook = komputer laptop!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🔋",
+    q: "UPS pada komputer berfungsi untuk...",
+    a: "Mengirim email", b: "Menyimpan foto",
+    c: "Cadangan daya listrik saat mati lampu", d: "Mencetak dokumen",
+    correct: "c",
+    explain: "UPS (Uninterruptible Power Supply) menyimpan daya listrik cadangan sehingga komputer tidak langsung mati saat listrik padam.",
+    example: "Contoh: Listrik tiba-tiba mati saat kamu mengerjakan tugas → UPS memberi waktu beberapa menit untuk menyimpan file!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🖱️",
+    q: "Menggerakkan file ke folder lain dengan menahan tombol mouse disebut...",
+    a: "Copy Paste", b: "Drag and Drop",
+    c: "Cut and Paste", d: "Delete",
+    correct: "b",
+    explain: "Drag and Drop adalah teknik memindahkan item dengan cara menekan (drag) dan melepaskan (drop) di tempat tujuan.",
+    example: "Contoh: Kamu menarik ikon foto dari Desktop ke folder 'Liburan' = Drag and Drop!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "💿",
+    q: "Flash disk digunakan untuk...",
+    a: "Menampilkan gambar", b: "Menyimpan dan memindahkan data",
+    c: "Mencetak dokumen", d: "Menghubungkan ke wifi",
+    correct: "b",
+    explain: "Flash disk (USB drive) adalah media penyimpanan portabel yang bisa dibawa-bawa untuk menyimpan dan memindahkan data.",
+    example: "Contoh: Kamu simpan tugas ke flash disk di sekolah → bawa ke rumah → buka di komputer rumah!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🔊",
+    q: "Microphone adalah perangkat...",
+    a: "Output untuk suara", b: "Input untuk suara",
+    c: "Penyimpanan", d: "Proses",
+    correct: "b",
+    explain: "Microphone adalah perangkat input yang menangkap suara dari pengguna dan mengubahnya menjadi sinyal digital.",
+    example: "Contoh: Kamu bicara ke microphone saat merekam video → suaramu masuk ke komputer sebagai data audio!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "📊",
+    q: "Shortcut keyboard Ctrl+C digunakan untuk...",
+    a: "Memotong teks (Cut)", b: "Menyalin teks (Copy)",
+    c: "Menempel teks (Paste)", d: "Menyimpan file (Save)",
+    correct: "b",
+    explain: "Ctrl+C adalah shortcut untuk menyalin (copy) teks atau file yang dipilih ke clipboard komputer.",
+    example: "Contoh: Pilih teks → tekan Ctrl+C → pindah ke dokumen lain → tekan Ctrl+V → teks tersalin!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "💾",
+    q: "Shortcut keyboard untuk menyimpan file adalah...",
+    a: "Ctrl+P", b: "Ctrl+Z", c: "Ctrl+S", d: "Ctrl+A",
+    correct: "c",
+    explain: "Ctrl+S adalah shortcut universal untuk menyimpan file. Sangat penting agar pekerjaan tidak hilang!",
+    example: "Tips: Biasakan tekan Ctrl+S setiap 5 menit saat mengerjakan tugas agar tidak kehilangan pekerjaan!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🔙",
+    q: "Tombol yang digunakan untuk menghapus huruf di sebelah kiri kursor adalah...",
+    a: "Delete", b: "Enter", c: "Backspace", d: "Escape",
+    correct: "c",
+    explain: "Backspace menghapus karakter di sebelah KIRI kursor. Delete menghapus karakter di sebelah KANAN kursor.",
+    example: "Contoh: Kamu mengetik 'HALLOO' (salah) → tekan Backspace dua kali → jadi 'HAL' → tambah 'LO' → 'HALLO'!"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "📋",
+    q: "Desktop pada komputer adalah...",
+    a: "Nama program editing", b: "Tampilan utama layar komputer setelah login",
+    c: "Jenis printer", d: "Merk keyboard",
+    correct: "b",
+    explain: "Desktop adalah layar utama yang muncul setelah kamu masuk ke komputer. Di sini ada ikon-ikon program dan file.",
+    example: "Contoh: Kamu nyalakan komputer → masukkan password → muncul layar dengan ikon-ikon = itulah Desktop!"
+  },
+
+  // === KATEGORI 2: SOFTWARE & SISTEM OPERASI (soal 21-40) ===
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "💿",
+    q: "Perangkat lunak (software) adalah...",
+    a: "Komponen fisik komputer", b: "Program atau aplikasi yang berjalan di komputer",
+    c: "Kabel penghubung", d: "Baterai komputer",
+    correct: "b",
+    explain: "Software adalah program tidak berwujud yang memberi instruksi kepada hardware untuk bekerja.",
+    example: "Contoh software: 🎮 Game, 📝 Microsoft Word, 🌐 Chrome, 🎵 Spotify — tidak bisa disentuh tapi bisa digunakan!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🖥️",
+    q: "Windows, macOS, dan Linux adalah contoh...",
+    a: "Game komputer", b: "Sistem Operasi",
+    c: "Antivirus", d: "Browser internet",
+    correct: "b",
+    explain: "Sistem Operasi (OS) adalah software utama yang mengelola semua sumber daya komputer dan memungkinkan program lain berjalan.",
+    example: "Contoh: Windows = OS buatan Microsoft, macOS = OS buatan Apple, Linux = OS gratis open source!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🌐",
+    q: "Google Chrome, Mozilla Firefox, dan Edge adalah contoh...",
+    a: "Sistem Operasi", b: "Browser web",
+    c: "Antivirus", d: "Office Suite",
+    correct: "b",
+    explain: "Browser web adalah program yang digunakan untuk mengakses dan menjelajahi halaman-halaman di internet.",
+    example: "Contoh: Kamu membuka Chrome → ketik 'www.youtube.com' → browser membuka halaman YouTube!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📝",
+    q: "Microsoft Word digunakan untuk...",
+    a: "Mengedit foto", b: "Membuat spreadsheet angka",
+    c: "Mengolah kata dan dokumen", d: "Membuat presentasi",
+    correct: "c",
+    explain: "Microsoft Word adalah program pengolah kata yang digunakan untuk membuat, mengedit, dan memformat dokumen teks.",
+    example: "Contoh: Kamu membuat surat, cerpen, atau laporan menggunakan Microsoft Word!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📊",
+    q: "Microsoft Excel digunakan untuk...",
+    a: "Mengolah angka dan membuat tabel", b: "Membuat gambar",
+    c: "Memutar musik", d: "Browsing internet",
+    correct: "a",
+    explain: "Microsoft Excel adalah program spreadsheet untuk mengolah data angka, membuat tabel, grafik, dan perhitungan matematis.",
+    example: "Contoh: Guru menggunakan Excel untuk menghitung nilai rata-rata seluruh siswa di kelas!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📊",
+    q: "Program yang digunakan untuk membuat presentasi slide adalah...",
+    a: "Microsoft Word", b: "Microsoft Excel",
+    c: "Microsoft PowerPoint", d: "Notepad",
+    correct: "c",
+    explain: "Microsoft PowerPoint adalah program untuk membuat presentasi dengan slide yang berisi teks, gambar, dan animasi.",
+    example: "Contoh: Kamu membuat presentasi tugas dengan gambar-gambar menarik menggunakan PowerPoint!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🛡️",
+    q: "Antivirus pada komputer berfungsi untuk...",
+    a: "Mempercepat internet", b: "Melindungi komputer dari virus dan malware",
+    c: "Membuat dokumen", d: "Mengatur tampilan",
+    correct: "b",
+    explain: "Antivirus adalah software yang melindungi komputer dari virus, malware, dan program berbahaya lainnya.",
+    example: "Contoh antivirus: Avast, McAfee, Windows Defender — seperti 'dokter' untuk komputermu!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🔄",
+    q: "Update software penting dilakukan untuk...",
+    a: "Membuat komputer lebih lambat", b: "Memperbaiki bug dan meningkatkan keamanan",
+    c: "Menghapus semua file", d: "Mengubah warna layar",
+    correct: "b",
+    explain: "Update software berisi perbaikan bug (kesalahan program), peningkatan keamanan, dan fitur-fitur baru yang lebih baik.",
+    example: "Contoh: WhatsApp update → ada fitur baru (stiker baru, pesan suara lebih panjang, dll)!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📁",
+    q: "Folder pada komputer digunakan untuk...",
+    a: "Menjalankan program", b: "Menyimpan dan mengorganisir file",
+    c: "Terhubung ke internet", d: "Mencetak dokumen",
+    correct: "b",
+    explain: "Folder (direktori) adalah tempat untuk menyimpan dan mengelompokkan file agar lebih mudah ditemukan.",
+    example: "Contoh: Folder 'Tugas Sekolah' berisi file 'Tugas IPA', 'Tugas Matematika', 'Tugas Bahasa Indonesia'!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🗑️",
+    q: "File yang dihapus pertama kali masuk ke...",
+    a: "Hard disk", b: "RAM", c: "Recycle Bin", d: "Desktop",
+    correct: "c",
+    explain: "Recycle Bin (Tempat Sampah) adalah folder khusus tempat file yang dihapus disimpan sementara sebelum dihapus permanen.",
+    example: "Contoh: Kamu hapus foto → foto masuk Recycle Bin → masih bisa dikembalikan jika belum dikosongkan!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📄",
+    q: "Ekstensi file .jpg/.png menandakan jenis file...",
+    a: "Dokumen teks", b: "Gambar/foto", c: "Musik", d: "Video",
+    correct: "b",
+    explain: "Ekstensi file menunjukkan jenis/format file. .jpg dan .png adalah format file gambar/foto digital.",
+    example: "Contoh ekstensi: 🖼️ .jpg/.png = gambar, 🎵 .mp3 = musik, 🎬 .mp4 = video, 📝 .docx = Word!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🎨",
+    q: "Program yang digunakan untuk mengedit foto disebut...",
+    a: "Spreadsheet", b: "Word Processor",
+    c: "Photo Editor", d: "Database",
+    correct: "c",
+    explain: "Photo Editor (editor foto) adalah software khusus untuk mengedit, mempercantik, dan memanipulasi gambar digital.",
+    example: "Contoh photo editor: Adobe Photoshop, Canva, PicsArt, Snapseed!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📲",
+    q: "Aplikasi yang diunduh dari toko aplikasi disebut...",
+    a: "Virus", b: "App (Aplikasi)",
+    c: "Sistem Operasi", d: "Driver",
+    correct: "b",
+    explain: "Aplikasi (app) adalah program yang diinstal di perangkat untuk fungsi tertentu, seperti game, media sosial, dll.",
+    example: "Contoh: Kamu download game 'Free Fire' dari Play Store → itu adalah aplikasi yang ter-install di HP-mu!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "☁️",
+    q: "Google Drive, Dropbox, dan iCloud adalah layanan...",
+    a: "Game online", b: "Penyimpanan cloud",
+    c: "Antivirus online", d: "Toko online",
+    correct: "b",
+    explain: "Cloud storage adalah penyimpanan data di server internet, sehingga bisa diakses dari mana saja dengan koneksi internet.",
+    example: "Contoh: Kamu simpan foto di Google Drive → buka di HP lain → foto masih ada karena tersimpan di cloud!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🔊",
+    q: "VLC, Windows Media Player adalah contoh program...",
+    a: "Pemutar media (Music/Video Player)", b: "Browser web",
+    c: "Pengolah kata", d: "Antivirus",
+    correct: "a",
+    explain: "Media player adalah software yang digunakan untuk memutar file audio (musik) dan video.",
+    example: "Contoh: Kamu buka file lagu .mp3 dengan VLC → VLC memutar musiknya untukmu!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🔗",
+    q: "Ctrl+Z pada komputer berfungsi untuk...",
+    a: "Menyalin teks", b: "Menyimpan file",
+    c: "Membatalkan aksi terakhir (Undo)", d: "Menutup program",
+    correct: "c",
+    explain: "Ctrl+Z adalah shortcut 'Undo' yang membatalkan aksi terakhir yang dilakukan, sangat berguna jika ada kesalahan.",
+    example: "Contoh: Kamu tidak sengaja hapus paragraf panjang → tekan Ctrl+Z → paragraf kembali lagi!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📌",
+    q: "Task Manager pada Windows digunakan untuk...",
+    a: "Membuat jadwal", b: "Melihat dan mengelola program yang berjalan",
+    c: "Mengedit video", d: "Mengatur wallpaper",
+    correct: "b",
+    explain: "Task Manager menampilkan semua program yang sedang berjalan dan memungkinkan kamu menutup program yang tidak merespons.",
+    example: "Contoh: Game macet/freeze → buka Task Manager → klik 'End Task' → game ditutup paksa!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "⚙️",
+    q: "Control Panel pada Windows digunakan untuk...",
+    a: "Bermain game", b: "Mengatur pengaturan sistem komputer",
+    c: "Membuat email", d: "Memutar musik",
+    correct: "b",
+    explain: "Control Panel adalah pusat pengaturan sistem Windows tempat kamu bisa mengubah setting komputer.",
+    example: "Contoh: Ganti wallpaper, atur volume, tambah printer — semuanya bisa dilakukan di Control Panel!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "📂",
+    q: "File Explorer pada Windows digunakan untuk...",
+    a: "Browsing internet", b: "Menjelajahi dan mengelola file dan folder",
+    c: "Mengirim email", d: "Edit video",
+    correct: "b",
+    explain: "File Explorer adalah program bawaan Windows untuk menjelajahi, menyalin, memindahkan, dan mengorganisir file.",
+    example: "Contoh: Kamu buka File Explorer → lihat isi folder 'Documents' → temukan tugas yang dicari!"
+  },
+  {
+    cat: "📱 Software", catClass: "cat-software", emoji: "🔔",
+    q: "Apa yang dimaksud dengan 'install' program?",
+    a: "Menghapus program dari komputer", b: "Memasang program agar bisa digunakan di komputer",
+    c: "Mengupdate program", d: "Mematikan program",
+    correct: "b",
+    explain: "Install (instalasi) adalah proses memasang dan menyiapkan program di komputer agar bisa digunakan.",
+    example: "Contoh: Download Minecraft → klik 'Install' → tunggu proses → Minecraft siap dimainkan!"
+  },
+
+  // === KATEGORI 3: INTERNET & JARINGAN (soal 41-60) ===
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🌍",
+    q: "Internet adalah...",
+    a: "Jenis komputer baru", b: "Jaringan komputer yang menghubungkan seluruh dunia",
+    c: "Program untuk membuat game", d: "Merk keyboard terkenal",
+    correct: "b",
+    explain: "Internet adalah jaringan global yang menghubungkan jutaan komputer di seluruh dunia, memungkinkan berbagi informasi.",
+    example: "Contoh: Kamu bisa chat dengan teman di Amerika menggunakan WhatsApp karena internet menghubungkan kalian!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🔗",
+    q: "URL adalah singkatan dari...",
+    a: "Universal Resource Link", b: "Uniform Resource Locator",
+    c: "United Resource Location", d: "Universal Route Linker",
+    correct: "b",
+    explain: "URL (Uniform Resource Locator) adalah alamat unik sebuah halaman web di internet, seperti alamat rumah di dunia digital.",
+    example: "Contoh URL: https://www.google.com — ini adalah alamat website Google!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📡",
+    q: "WiFi adalah teknologi yang memungkinkan...",
+    a: "Mencetak dokumen tanpa kabel", b: "Terhubung ke internet tanpa kabel",
+    c: "Menyalakan komputer dari jauh", d: "Mengirim file lewat bluetooth",
+    correct: "b",
+    explain: "WiFi adalah teknologi jaringan nirkabel yang memungkinkan perangkat terhubung ke internet tanpa menggunakan kabel.",
+    example: "Contoh: HP-mu terhubung ke WiFi rumah → bisa nonton YouTube tanpa pakai data seluler!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📧",
+    q: "Email adalah...",
+    a: "Surat elektronik yang dikirim melalui internet", b: "Jenis game online",
+    c: "Program mengedit foto", d: "Jenis virus komputer",
+    correct: "a",
+    explain: "Email (electronic mail) adalah sistem pengiriman surat/pesan secara elektronik melalui internet, sangat cepat dan murah.",
+    example: "Contoh: Guru mengirim soal ujian lewat email → siswa membuka email → membaca soalnya!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🔍",
+    q: "Google, Bing, dan Yahoo adalah contoh...",
+    a: "Media sosial", b: "Search Engine (Mesin Pencari)",
+    c: "Email provider", d: "Game online",
+    correct: "b",
+    explain: "Search engine adalah sistem yang membantu mencari informasi di internet berdasarkan kata kunci yang dimasukkan.",
+    example: "Contoh: Kamu ketik 'cara membuat brownies' di Google → Google menampilkan ribuan resep!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📱",
+    q: "Instagram, TikTok, dan Facebook adalah contoh...",
+    a: "Browser web", b: "Sistem Operasi",
+    c: "Media Sosial", d: "Antivirus",
+    correct: "c",
+    explain: "Media sosial adalah platform online tempat orang berbagi konten, berinteraksi, dan berkomunikasi satu sama lain.",
+    example: "Contoh: Kamu upload foto liburan di Instagram → teman-teman bisa lihat dan memberikan 'like'!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🎬",
+    q: "YouTube adalah platform untuk...",
+    a: "Membuat dokumen online", b: "Berbagi dan menonton video",
+    c: "Belanja online", d: "Bermain game",
+    correct: "b",
+    explain: "YouTube adalah platform berbagi video terbesar di dunia di mana siapa saja bisa menonton dan mengunggah video.",
+    example: "Contoh: Kamu buka YouTube → cari 'tutorial origami' → tonton videonya → praktikkan di rumah!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🔒",
+    q: "HTTPS pada URL website berarti...",
+    a: "Website tidak aman", b: "Website dalam pemeliharaan",
+    c: "Website menggunakan enkripsi yang aman", d: "Website gratis",
+    correct: "c",
+    explain: "HTTPS (S = Secure) berarti website menggunakan enkripsi SSL untuk melindungi data yang dikirim, lebih aman dari HTTP.",
+    example: "Contoh: https://www.google.com (aman ✅) vs http://www.asal.com (kurang aman ⚠️)!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "💬",
+    q: "WhatsApp dan Telegram adalah aplikasi untuk...",
+    a: "Mengedit foto", b: "Pesan instan dan komunikasi",
+    c: "Membuat website", d: "Menyimpan data",
+    correct: "b",
+    explain: "Aplikasi pesan instan (instant messaging) memungkinkan pengiriman pesan teks, foto, dan video secara cepat lewat internet.",
+    example: "Contoh: Kamu kirim pesan 'Halo!' ke teman di WhatsApp → pesan sampai dalam hitungan detik!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🛒",
+    q: "Tokopedia, Shopee, dan Lazada adalah contoh...",
+    a: "Media sosial", b: "E-commerce (toko belanja online)",
+    c: "Game online", d: "Layanan email",
+    correct: "b",
+    explain: "E-commerce adalah platform belanja online tempat orang bisa membeli dan menjual produk melalui internet.",
+    example: "Contoh: Ibu beli baju di Shopee → bayar lewat transfer → paket datang 2 hari kemudian!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🌐",
+    q: "Website adalah...",
+    a: "Jenis virus komputer", b: "Kumpulan halaman web yang bisa diakses melalui internet",
+    c: "Alat untuk mencetak", d: "Program antivirus",
+    correct: "b",
+    explain: "Website adalah kumpulan halaman web yang terhubung, bisa berisi teks, gambar, video, dan link ke halaman lain.",
+    example: "Contoh: Website sekolahmu berisi info jadwal, pengumuman, dan profil guru — bisa diakses kapan saja!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📶",
+    q: "Bandwidth internet yang lebih besar artinya...",
+    a: "Lebih lambat", b: "Lebih mahal", c: "Lebih cepat", d: "Lebih berbahaya",
+    correct: "c",
+    explain: "Bandwidth adalah kapasitas jalur data internet. Bandwidth besar = lebih banyak data bisa mengalir = internet lebih cepat.",
+    example: "Contoh: Bandwidth 100 Mbps bisa streaming video HD tanpa buffering, sedangkan 1 Mbps akan sering buffering!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🔐",
+    q: "Password yang kuat sebaiknya berisi...",
+    a: "Hanya nama sendiri", b: "Tanggal lahir saja",
+    c: "Kombinasi huruf besar, kecil, angka, dan simbol", d: "Angka 123456",
+    correct: "c",
+    explain: "Password kuat menggunakan kombinasi huruf besar, huruf kecil, angka, dan simbol agar sulit ditebak oleh orang lain.",
+    example: "Contoh password lemah: 'andi123' ❌\nContoh password kuat: 'And!123#Seru' ✅"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🎮",
+    q: "Game online adalah permainan yang dimainkan...",
+    a: "Sendirian tanpa internet", b: "Bersama pemain lain melalui internet",
+    c: "Hanya di TV", d: "Di atas meja",
+    correct: "b",
+    explain: "Game online memungkinkan pemain dari berbagai tempat bermain bersama melalui koneksi internet secara real-time.",
+    example: "Contoh: Kamu main Mobile Legends dengan teman-teman yang berbeda kota = game online!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📹",
+    q: "Video call memungkinkan kita...",
+    a: "Melihat dan berbicara dengan orang lain dari jarak jauh", b: "Mengedit video",
+    c: "Mengunduh film", d: "Membuat website",
+    correct: "a",
+    explain: "Video call adalah komunikasi real-time menggunakan kamera dan mikrofon melalui internet sehingga bisa melihat wajah lawan bicara.",
+    example: "Contoh: Kamu video call nenek di kampung menggunakan WhatsApp — bisa lihat wajah nenek langsung!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📰",
+    q: "Blog adalah...",
+    a: "Jenis virus", b: "Jurnal/catatan online yang dipublikasikan di internet",
+    c: "Perangkat keras", d: "Program antivirus",
+    correct: "b",
+    explain: "Blog adalah website yang berisi tulisan/artikel yang ditulis secara berkala oleh blogger, bisa dibaca semua orang.",
+    example: "Contoh: Seseorang menulis pengalaman wisata di blognya → kamu baca artikelnya untuk mencari info tempat wisata!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📊",
+    q: "Download berarti...",
+    a: "Mengirim file ke internet", b: "Mengambil/mengunduh file dari internet ke perangkat",
+    c: "Menghapus file", d: "Memformat perangkat",
+    correct: "b",
+    explain: "Download adalah proses memindahkan data/file dari server internet ke perangkat kamu (HP, laptop, komputer).",
+    example: "Contoh: Kamu download aplikasi Minecraft dari website resminya → file tersimpan di HP-mu!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "📤",
+    q: "Upload berarti...",
+    a: "Mengunduh file dari internet", b: "Mengirim/mengunggah file ke internet",
+    c: "Menghapus file dari HP", d: "Mematikan komputer",
+    correct: "b",
+    explain: "Upload adalah proses mengirim data/file dari perangkatmu ke server internet atau ke pengguna lain.",
+    example: "Contoh: Kamu upload foto liburan ke Instagram → foto dikirim ke server Instagram → teman bisa lihat!"
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🔑",
+    q: "Akun media sosial sebaiknya...",
+    a: "Dibagikan passwordnya ke semua teman", b: "Dijaga kerahasiaannya dan tidak sembarangan dibagikan",
+    c: "Digunakan bersama-sama", d: "Tanpa password agar mudah login",
+    correct: "b",
+    explain: "Password akun adalah kunci keamanan privasimu. Jangan pernah memberikan password kepada siapapun, bahkan teman sekalipun.",
+    example: "Ingat: Tidak ada orang yang boleh tahu passwordmu, termasuk teman dekat! Simpan password dengan baik."
+  },
+  {
+    cat: "🌐 Internet", catClass: "cat-internet", emoji: "🤝",
+    q: "Zoom dan Google Meet adalah aplikasi untuk...",
+    a: "Belanja online", b: "Video conference/rapat online",
+    c: "Mengedit foto", d: "Bermain game",
+    correct: "b",
+    explain: "Aplikasi video conference memungkinkan pertemuan/rapat online dengan banyak orang sekaligus melalui internet.",
+    example: "Contoh: Saat pandemi, kamu belajar dari rumah menggunakan Zoom bersama guru dan teman-teman!"
+  },
+
+  // === KATEGORI 4: ALGORITMA & PEMROGRAMAN DASAR (soal 61-80) ===
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🗺️",
+    q: "Algoritma adalah...",
+    a: "Jenis komputer", b: "Langkah-langkah berurutan untuk menyelesaikan masalah",
+    c: "Nama program komputer", d: "Bahasa pemrograman",
+    correct: "b",
+    explain: "Algoritma adalah urutan instruksi atau langkah-langkah yang jelas dan logis untuk menyelesaikan suatu masalah.",
+    example: "Contoh algoritma membuat mie instan:\n1. Rebus air\n2. Masukkan mie\n3. Masak 3 menit\n4. Angkat dan tiriskan\n5. Tambahkan bumbu\n6. Sajikan!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🔄",
+    q: "Perulangan (loop) dalam pemrograman digunakan untuk...",
+    a: "Menghapus data", b: "Menjalankan perintah yang sama berulang kali",
+    c: "Menyimpan file", d: "Terhubung ke internet",
+    correct: "b",
+    explain: "Loop (perulangan) adalah struktur yang membuat komputer mengulang sekelompok instruksi beberapa kali tanpa menulis ulang.",
+    example: "Contoh: Dalam Scratch, kamu buat karakter berjalan 10 langkah menggunakan 'repeat 10' = loop!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "❓",
+    q: "Kondisi IF dalam pemrograman artinya...",
+    a: "Selalu lakukan", b: "Jika kondisi benar, lakukan aksi tertentu",
+    c: "Ulangi terus", d: "Hentikan program",
+    correct: "b",
+    explain: "Kondisi IF adalah percabangan logika: jika kondisi terpenuhi → lakukan aksi A, jika tidak → lakukan aksi B (atau tidak lakukan apa-apa).",
+    example: "Contoh:\nIF (hujan) THEN\n  pakai payung\nELSE\n  tidak perlu payung\nEND IF"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🔢",
+    q: "Variabel dalam pemrograman adalah...",
+    a: "Jenis komputer", b: "Tempat penyimpanan data yang bisa berubah",
+    c: "Nama program", d: "Kesalahan dalam program",
+    correct: "b",
+    explain: "Variabel adalah 'kotak' penyimpanan di memori komputer yang bisa menyimpan nilai dan nilainya bisa berubah.",
+    example: "Contoh: nilai = 85  (variabel 'nilai' menyimpan angka 85)\nnama = 'Budi'  (variabel 'nama' menyimpan teks 'Budi')"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🐛",
+    q: "Bug dalam pemrograman adalah...",
+    a: "Serangga di keyboard", b: "Kesalahan atau error dalam program",
+    c: "Nama bahasa pemrograman", d: "Jenis antivirus",
+    correct: "b",
+    explain: "Bug adalah kesalahan dalam kode program yang menyebabkan program berjalan tidak sesuai yang diharapkan.",
+    example: "Contoh: Program kalkulator harusnya 2+2=4, tapi karena bug malah hasilnya 5 → ada bug!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🔧",
+    q: "Debugging adalah proses...",
+    a: "Membuat bug baru", b: "Mencari dan memperbaiki kesalahan dalam program",
+    c: "Menulis kode baru", d: "Menginstal program",
+    correct: "b",
+    explain: "Debugging adalah proses menemukan, menganalisis, dan memperbaiki bug (kesalahan) dalam kode program.",
+    example: "Contoh: Programmu tidak berjalan benar → kamu periksa kode satu per satu → temukan kesalahan → perbaiki!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "📝",
+    q: "Bahasa pemrograman digunakan untuk...",
+    a: "Berkomunikasi dengan teman", b: "Memberi instruksi kepada komputer",
+    c: "Belajar bahasa asing", d: "Mengatur tampilan layar",
+    correct: "b",
+    explain: "Bahasa pemrograman adalah bahasa khusus yang digunakan programmer untuk memberi instruksi kepada komputer.",
+    example: "Contoh bahasa pemrograman: Python 🐍, JavaScript, Scratch 🐱, Java, C++ — masing-masing punya sintaks berbeda!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🏁",
+    q: "Dalam algoritma, langkah yang dimulai pertama adalah...",
+    a: "End (Selesai)", b: "Process (Proses)",
+    c: "Start (Mulai)", d: "Output",
+    correct: "c",
+    explain: "Algoritma selalu dimulai dengan 'Start/Begin' dan diakhiri dengan 'End/Stop'. Urutan ini harus diikuti!",
+    example: "Algoritma: START → Input → Process → Output → END\n(Seperti resep: mulai dari bahan → proses masak → sajikan!)"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "📊",
+    q: "Flowchart (diagram alur) digunakan untuk...",
+    a: "Membuat grafik nilai", b: "Menggambarkan alur algoritma secara visual",
+    c: "Menggambar kartun", d: "Mengatur folder",
+    correct: "b",
+    explain: "Flowchart adalah representasi visual dari algoritma menggunakan simbol-simbol khusus (kotak, berlian, panah).",
+    example: "Simbol flowchart:\n⬭ Oval = Start/End\n☐ Kotak = Proses\n◇ Berlian = Keputusan IF\n→ Panah = Alur"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🐱",
+    q: "Scratch adalah...",
+    a: "Nama kucing", b: "Platform pemrograman visual berbasis blok untuk anak-anak",
+    c: "Jenis komputer", d: "Game online",
+    correct: "b",
+    explain: "Scratch adalah platform coding untuk anak-anak yang menggunakan blok visual berwarna, sehingga lebih mudah dipelajari.",
+    example: "Di Scratch kamu bisa membuat: 🎮 game sederhana, 🎬 animasi, 🎵 musik, dan cerita interaktif!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🔢",
+    q: "Output program adalah...",
+    a: "Data yang dimasukkan", b: "Kesalahan program",
+    c: "Hasil yang dikeluarkan oleh program", d: "Kode sumber program",
+    correct: "c",
+    explain: "Output adalah hasil yang dihasilkan oleh program setelah memproses input. Bisa berupa angka, teks, gambar, atau suara.",
+    example: "Contoh: Input = 5 + 3 → Program proses penjumlahan → Output = 8 (angka yang muncul di layar)"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "💻",
+    q: "Coding (pemrograman) adalah proses...",
+    a: "Bermain video game", b: "Menulis instruksi untuk komputer menggunakan bahasa pemrograman",
+    c: "Menggambar di komputer", d: "Menonton video",
+    correct: "b",
+    explain: "Coding adalah aktivitas menulis kode/instruksi dalam bahasa pemrograman agar komputer melakukan sesuatu.",
+    example: "Contoh: Programmer menulis kode Python → komputer membaca kode → menjalankan instruksinya!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🔵",
+    q: "Urutan langkah dalam algoritma yang benar adalah...",
+    a: "Acak (tidak berurutan)", b: "Dari bawah ke atas",
+    c: "Dari kanan ke kiri", d: "Berurutan dan logis dari awal ke akhir",
+    correct: "d",
+    explain: "Algoritma harus berurutan dan logis. Jika urutan salah, hasil program bisa salah atau program tidak bisa berjalan.",
+    example: "Analogi: Kamu tidak bisa makan nasi sebelum memasak nasi, dan tidak bisa memasak sebelum ada beras!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🧩",
+    q: "Decomposition dalam computational thinking adalah...",
+    a: "Membuat masalah lebih besar", b: "Memecah masalah besar menjadi bagian-bagian kecil",
+    c: "Mengabaikan masalah", d: "Menyalin solusi orang lain",
+    correct: "b",
+    explain: "Decomposition adalah kemampuan memecah masalah kompleks menjadi bagian-bagian lebih kecil yang lebih mudah diselesaikan.",
+    example: "Contoh: Masalah 'buat website' → pecah menjadi: desain → tulis kode HTML → tulis CSS → tambah JS!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🔁",
+    q: "Fungsi (function) dalam pemrograman adalah...",
+    a: "Kesalahan program", b: "Kumpulan kode yang bisa dipanggil berkali-kali",
+    c: "Jenis variabel", d: "Nama file",
+    correct: "b",
+    explain: "Function adalah blok kode yang melakukan tugas tertentu dan bisa dipanggil/digunakan berkali-kali dalam program.",
+    example: "Contoh: Function 'sapa(nama)' → setiap dipanggil dengan nama berbeda → tampilkan 'Halo, [nama]!'"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🤖",
+    q: "Kecerdasan Buatan (AI/Artificial Intelligence) adalah...",
+    a: "Robot yang bisa berlari", b: "Kemampuan komputer untuk meniru kecerdasan manusia",
+    c: "Jenis virus komputer", d: "Program mengedit foto",
+    correct: "b",
+    explain: "AI adalah teknologi yang membuat komputer bisa belajar, berpikir, dan membuat keputusan layaknya manusia.",
+    example: "Contoh AI: 🗣️ Siri/Google Assistant menjawab pertanyaanmu, 🎵 Spotify merekomendasikan lagu, 🚗 mobil self-driving!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🎮",
+    q: "Dalam Scratch, sprite adalah...",
+    a: "Jenis blok kode", b: "Karakter atau objek yang bisa diprogram",
+    c: "Latar belakang (background)", d: "Suara dalam animasi",
+    correct: "b",
+    explain: "Sprite dalam Scratch adalah karakter atau objek yang bisa diprogram untuk bergerak, berbicara, dan berinteraksi.",
+    example: "Contoh: Kucing (mascot Scratch) adalah sprite default. Kamu bisa tambahkan sprite lain seperti UFO, bola, dll!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "📐",
+    q: "Dalam pemrograman, TRUE berarti...",
+    a: "Salah", b: "Benar/ya",
+    c: "Mungkin", d: "Tidak diketahui",
+    correct: "b",
+    explain: "TRUE dan FALSE adalah nilai boolean (logika). TRUE = benar/ya, FALSE = salah/tidak. Digunakan dalam kondisi IF.",
+    example: "Contoh: 5 > 3 = TRUE (benar karena 5 lebih besar dari 3)\n2 > 7 = FALSE (salah karena 2 tidak lebih besar dari 7)"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "💡",
+    q: "Pola (pattern) dalam computational thinking berarti...",
+    a: "Gambar yang indah", b: "Menemukan kesamaan atau kemiripan dalam masalah",
+    c: "Warna program", d: "Urutan angka acak",
+    correct: "b",
+    explain: "Pattern recognition adalah kemampuan menemukan pola, kesamaan, atau tren dalam data untuk membantu memecahkan masalah.",
+    example: "Contoh: Polanya bilangan genap: 2, 4, 6, 8, ___ → kamu tahu jawabannya 10 karena mengenali pola!"
+  },
+  {
+    cat: "🤖 Algoritma", catClass: "cat-algorithm", emoji: "🧠",
+    q: "Abstraksi dalam computational thinking adalah...",
+    a: "Membuat program lebih rumit", b: "Menyederhanakan masalah dengan fokus pada hal penting saja",
+    c: "Mengabaikan semua detail", d: "Menyalin program orang lain",
+    correct: "b",
+    explain: "Abstraksi adalah kemampuan menyederhanakan masalah kompleks dengan hanya fokus pada informasi yang relevan dan penting.",
+    example: "Contoh: Peta adalah abstraksi dari kota nyata — tidak tampilkan setiap pohon dan batu, hanya jalan dan gedung penting!"
+  },
+
+  // === KATEGORI 5: KEAMANAN DIGITAL (soal 81-100) ===
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🔒",
+    q: "Virus komputer adalah...",
+    a: "Program yang merusak komputer dan bisa menyebar", b: "Jenis antivirus terbaik",
+    c: "Program untuk membuat game", d: "Cara mempercepat internet",
+    correct: "a",
+    explain: "Virus komputer adalah program berbahaya yang bisa merusak, menghapus, atau mencuri data, serta menyebar ke komputer lain.",
+    example: "Analogi: Virus komputer seperti flu manusia — menyebar dari satu komputer ke komputer lain melalui file!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "⚠️",
+    q: "Phishing adalah...",
+    a: "Jenis olahraga", b: "Penipuan online yang mencuri data pribadi",
+    c: "Program edit foto", d: "Cara mempercepat WiFi",
+    correct: "b",
+    explain: "Phishing adalah penipuan siber di mana peretas menyamar sebagai pihak terpercaya untuk mencuri data pribadi (password, dll).",
+    example: "Contoh: Kamu menerima email palsu dari 'Bank X' minta password → jangan masukkan! Itu phishing!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🦠",
+    q: "Malware adalah...",
+    a: "Software yang berguna", b: "Software berbahaya yang merugikan komputer",
+    c: "Jenis browser", d: "Nama keyboard",
+    correct: "b",
+    explain: "Malware (Malicious Software) adalah istilah umum untuk semua jenis software berbahaya seperti virus, spyware, ransomware.",
+    example: "Jenis malware: 🦠 Virus, 🕷️ Spyware (mata-mata), 💸 Ransomware (mengunci file minta tebusan)!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🔐",
+    q: "Cara terbaik melindungi akun online adalah...",
+    a: "Tidak pakai password", b: "Gunakan password yang sama untuk semua akun",
+    c: "Gunakan password kuat dan unik untuk setiap akun", d: "Bagikan password ke teman",
+    correct: "c",
+    explain: "Gunakan password berbeda untuk setiap akun. Jika satu akun diretas, akun lainnya tetap aman.",
+    example: "Tips: Gunakan aplikasi Password Manager seperti LastPass untuk menyimpan banyak password yang kuat!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "👤",
+    q: "Data pribadi yang tidak boleh dibagikan sembarangan di internet adalah...",
+    a: "Nama tokoh anime favoritmu", b: "Warna favorit",
+    c: "Alamat rumah, nomor HP, dan foto KTP", d: "Makanan favorit",
+    correct: "c",
+    explain: "Data pribadi sensitif seperti alamat, nomor telepon, NIK, dan foto dokumen identitas tidak boleh dibagikan sembarangan.",
+    example: "Aman dibagikan: 🎮 game favorit, warna kesukaan\nRAHASIA: 🏠 alamat rumah, 📱 nomor HP, 🪪 nomor KTP!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🤝",
+    q: "Cyberbullying adalah...",
+    a: "Bermain game online bersama", b: "Perundungan atau pelecehan yang dilakukan melalui internet",
+    c: "Cara belajar online", d: "Jenis antivirus",
+    correct: "b",
+    explain: "Cyberbullying adalah perilaku intimidasi, hinaan, atau pelecehan yang dilakukan seseorang kepada orang lain melalui media digital.",
+    example: "Contoh cyberbullying: Mengirim pesan jahat, menyebar foto memalukan, membuat akun palsu untuk mengejek seseorang."
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🚫",
+    q: "Jika ada orang asing mengajak bertemu lewat internet, sebaiknya...",
+    a: "Langsung temui saja", b: "Bagikan alamat rumahmu",
+    c: "Tolak dan ceritakan kepada orang tua atau guru", d: "Rahasiakan dari orang tua",
+    correct: "c",
+    explain: "Jangan pernah menemui orang asing yang dikenal dari internet tanpa sepengetahuan orang tua. Selalu ceritakan!",
+    example: "Ingat: Di internet, orang bisa berpura-pura menjadi siapa saja. Orang dewasa yang 'baik' tidak akan memintamu merahasiakan pertemuan!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "📲",
+    q: "Konten yang tidak pantas di internet sebaiknya...",
+    a: "Dibagikan ke teman-teman", b: "Disimpan di perangkat",
+    c: "Dilaporkan dan ditutup", d: "Ditonton terus",
+    correct: "c",
+    explain: "Konten tidak pantas (kekerasan, pornografi, ujaran kebencian) harus segera dilaporkan dan jangan disebarkan.",
+    example: "Langkah aman: Tutup konten tersebut → ceritakan kepada orang tua → laporkan konten tersebut di platform!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "💳",
+    q: "Scam online adalah...",
+    a: "Diskon belanja online yang nyata", b: "Penipuan yang bertujuan mencuri uang atau data",
+    c: "Game online gratis", d: "Cara mempercepat download",
+    correct: "b",
+    explain: "Scam online adalah penipuan melalui internet yang biasanya menjanjikan hadiah, diskon besar, atau menakut-nakuti korban.",
+    example: "Contoh scam: 'Selamat! Kamu menang iPhone gratis! Bayar ongkos kirim dulu...' → ini penipuan (scam)!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🔄",
+    q: "Alasan penting untuk logout dari akun setelah selesai adalah...",
+    a: "Agar komputer lebih cepat", b: "Mencegah orang lain mengakses akunmu",
+    c: "Menghemat baterai", d: "Agar tampilan lebih bagus",
+    correct: "b",
+    explain: "Logout (keluar akun) penting dilakukan terutama di komputer umum agar orang lain tidak bisa mengakses akunmu.",
+    example: "Kebiasaan baik: Selesai pakai komputer sekolah/warnet → SELALU logout dari semua akun!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "📧",
+    q: "Email dari pengirim tidak dikenal yang meminta kamu klik link sebaiknya...",
+    a: "Langsung diklik", b: "Diteruskan ke semua teman",
+    c: "Diabaikan dan dihapus", d: "Dibuka dan dibalas",
+    correct: "c",
+    explain: "Email mencurigakan dari pengirim tidak dikenal adalah ciri-ciri phishing. Jangan klik link di dalamnya!",
+    example: "Cara aman: Jangan klik link di email mencurigakan → verifikasi langsung ke website resmi → hapus email tersebut!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "📱",
+    q: "Screen time yang berlebihan dapat menyebabkan...",
+    a: "Badan lebih sehat", b: "Mata lelah, gangguan tidur, dan kurang gerak",
+    c: "Pintar secara otomatis", d: "Bertambah tinggi badan",
+    correct: "b",
+    explain: "Terlalu lama menatap layar bisa menyebabkan mata lelah, sakit kepala, gangguan tidur, dan kurangnya aktivitas fisik.",
+    example: "Tips sehat: Ikuti aturan 20-20-20: setiap 20 menit, lihat objek 20 kaki (6m) jauhnya selama 20 detik!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🛡️",
+    q: "Firewall pada komputer berfungsi untuk...",
+    a: "Memadamkan api", b: "Melindungi komputer dari akses tidak sah dari internet",
+    c: "Mempercepat internet", d: "Membuat website",
+    correct: "b",
+    explain: "Firewall adalah sistem keamanan yang memfilter lalu lintas jaringan dan mencegah akses tidak sah ke komputermu.",
+    example: "Analogi: Firewall seperti satpam yang memeriksa siapa yang boleh masuk dan keluar dari rumahmu!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🤫",
+    q: "Informasi pribadi yang sebaiknya tidak diposting di media sosial adalah...",
+    a: "Foto selfie biasa", b: "Nama sekolah dan jadwal harian",
+    c: "Cerita seru", d: "Foto makanan enak",
+    correct: "b",
+    explain: "Nama sekolah dan jadwal rutin bisa disalahgunakan oleh orang jahat untuk mengetahui keberadaanmu.",
+    example: "Contoh berbahaya: Post 'Aku di sekolah SDN 5 setiap pagi jam 7!' → orang jahat tahu lokasi dan rutinmu!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "✅",
+    q: "Hoaks (berita bohong) di internet sebaiknya...",
+    a: "Langsung disebarkan ke semua orang", b: "Dipercaya begitu saja",
+    c: "Dicek dulu kebenarannya dari sumber terpercaya", d: "Dijadikan bahan lelucon",
+    correct: "c",
+    explain: "Hoaks adalah informasi palsu yang menyesatkan. Selalu verifikasi berita dari sumber terpercaya sebelum membagikannya!",
+    example: "Cara cek hoaks: Buka situs Kominfo/TurnBackHoax → cari judul berita → cek apakah itu hoaks atau fakta!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "💡",
+    q: "Etiket digital (Netiquette) adalah...",
+    a: "Jenis jaringan internet", b: "Aturan sopan santun dalam berkomunikasi di internet",
+    c: "Program antivirus", d: "Cara mempercepat komputer",
+    correct: "b",
+    explain: "Netiquette adalah norma dan etika yang harus diikuti saat berkomunikasi online agar interaksi tetap sopan dan positif.",
+    example: "Contoh netiquette: Gunakan bahasa sopan, tidak mengirim pesan berulang-ulang, tidak membentak dengan HURUF KAPITAL SEMUA!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "📵",
+    q: "Jika ada teman yang menjadi korban cyberbullying, sebaiknya...",
+    a: "Diam saja dan tidak peduli", b: "Ikut mengejek",
+    c: "Mendukung dan melaporkan kepada orang dewasa", d: "Menyebarkan kejadiannya",
+    correct: "c",
+    explain: "Korban cyberbullying membutuhkan dukungan. Bantu mereka dengan melapor ke guru atau orang tua, dan screenshot buktinya.",
+    example: "Tindakan: Dukung teman → screenshot bukti → laporkan ke guru/orang tua → blokir akun pelaku!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🔢",
+    q: "Two-factor authentication (2FA) berfungsi untuk...",
+    a: "Membuat login lebih cepat", b: "Menambahkan lapisan keamanan ekstra untuk akun",
+    c: "Menghapus password", d: "Membuat website",
+    correct: "b",
+    explain: "2FA adalah sistem keamanan dua langkah: selain password, kamu juga perlu kode OTP dari HP untuk login.",
+    example: "Contoh: Login Instagram → masukkan password → Instagram kirim kode ke HP → masukkan kode → berhasil login!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "⚡",
+    q: "Copyright (hak cipta) karya digital berarti...",
+    a: "Semua konten internet bebas digunakan", b: "Karya tersebut dilindungi dan tidak bisa digunakan sembarangan",
+    c: "Konten gratis untuk semua", d: "Bisa dicopy tanpa izin",
+    correct: "b",
+    explain: "Copyright melindungi karya kreatif (musik, foto, video, tulisan) dari penggunaan tanpa izin pembuatnya.",
+    example: "Contoh: Lagu milik artis → tidak bisa diupload ulang tanpa izin → bisa kena DMCA/copyright strike!"
+  },
+  {
+    cat: "🛡️ Keamanan", catClass: "cat-safety", emoji: "🌱",
+    q: "Digital footprint (jejak digital) adalah...",
+    a: "Cara menggunakan komputer dengan kaki", b: "Rekam jejak aktivitasmu di internet yang tersimpan",
+    c: "Jenis game mobile", d: "Program penjejak virus",
+    correct: "b",
+    explain: "Jejak digital adalah semua informasi yang tersimpan tentang aktivitas onlinemu: postingan, komentar, pencarian, dll.",
+    example: "Ingat: Apapun yang kamu posting di internet meninggalkan jejak yang bisa dilihat orang lain, bahkan bertahun-tahun kemudian!"
+  },
+
+  // === KATEGORI 6: DATA & INFORMASI (soal 101-120) ===
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📈",
+    q: "Data adalah...",
+    a: "Informasi yang sudah diolah", b: "Fakta mentah yang belum diolah",
+    c: "Program komputer", d: "Jenis hardware",
+    correct: "b",
+    explain: "Data adalah kumpulan fakta mentah (angka, teks, gambar) yang belum diolah. Setelah diolah, data menjadi informasi.",
+    example: "Contoh: Nilai ujian: 85, 90, 70 = DATA mentah → setelah dihitung rata-ratanya = 81,6 = INFORMASI!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📋",
+    q: "Tabel/spreadsheet digunakan untuk...",
+    a: "Menggambar animasi", b: "Mengorganisir data dalam baris dan kolom",
+    c: "Memutar musik", d: "Browsing internet",
+    correct: "b",
+    explain: "Tabel dan spreadsheet adalah cara mengorganisir data dalam format baris dan kolom untuk memudahkan analisis.",
+    example: "Contoh: Daftar nilai siswa dalam tabel Excel: Nama | Nilai IPA | Nilai Mat | Rata-rata!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📊",
+    q: "Grafik batang (bar chart) digunakan untuk...",
+    a: "Menampilkan peta", b: "Membandingkan nilai dari beberapa kategori",
+    c: "Menggambar karakter", d: "Menyimpan video",
+    correct: "b",
+    explain: "Grafik batang sangat baik untuk membandingkan nilai antar kategori secara visual.",
+    example: "Contoh: Grafik batang menampilkan jumlah siswa yang suka olahraga: Sepak bola=20, Basket=15, Renang=10!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🥧",
+    q: "Diagram lingkaran (pie chart) biasanya digunakan untuk menampilkan...",
+    a: "Perubahan nilai dari waktu ke waktu", b: "Perbandingan nilai antar item",
+    c: "Proporsi/persentase dari keseluruhan", d: "Lokasi pada peta",
+    correct: "c",
+    explain: "Pie chart menampilkan bagian-bagian dari keseluruhan (100%). Sangat baik untuk menunjukkan proporsi/persentase.",
+    example: "Contoh: Pie chart anggaran sekolah: Buku 40%, Olahraga 25%, Kegiatan 20%, Lain-lain 15%!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📉",
+    q: "Grafik garis (line chart) terbaik untuk menampilkan...",
+    a: "Kategori yang berbeda", b: "Perubahan data dari waktu ke waktu",
+    c: "Proporsi", d: "Lokasi pada peta",
+    correct: "b",
+    explain: "Line chart sangat baik menampilkan tren atau perubahan nilai dari waktu ke waktu (tren naik, turun, atau stabil).",
+    example: "Contoh: Grafik garis nilai ujian bulanan: Jan=75, Feb=80, Mar=85 → terlihat tren nilai meningkat!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🔢",
+    q: "Bit adalah...",
+    a: "Satuan terbesar data komputer", b: "Unit terkecil data dalam komputer (0 atau 1)",
+    c: "Jenis virus", d: "Nama program",
+    correct: "b",
+    explain: "Bit (Binary Digit) adalah unit terkecil data komputer. Nilainya hanya 0 atau 1. Komputer menggunakan bit untuk semua operasi.",
+    example: "Hierarki: 1 Byte = 8 bit → 1 KB = 1024 Byte → 1 MB = 1024 KB → 1 GB = 1024 MB!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "💾",
+    q: "1 Gigabyte (GB) sama dengan berapa Megabyte (MB)?",
+    a: "100 MB", b: "512 MB", c: "1024 MB", d: "2000 MB",
+    correct: "c",
+    explain: "Dalam sistem biner komputer: 1 GB = 1024 MB = 1.048.576 KB = sekitar 1 miliar byte.",
+    example: "Contoh: Film HD bisa berukuran sekitar 1-2 GB. Jika HP-mu punya 64GB, bisa simpan sekitar 32-64 film!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🔡",
+    q: "Sistem bilangan yang digunakan komputer adalah...",
+    a: "Desimal (basis 10)", b: "Biner (basis 2)",
+    c: "Oktal (basis 8)", d: "Heksadesimal (basis 16)",
+    correct: "b",
+    explain: "Komputer menggunakan sistem biner karena transistor hanya punya 2 kondisi: menyala (1) dan mati (0).",
+    example: "Contoh biner: 0 = 0, 1 = 1, 10 = 2, 11 = 3, 100 = 4 (dalam biner, setiap posisi nilainya 2 kali lipat!)"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🗄️",
+    q: "Database adalah...",
+    a: "Jenis browser", b: "Kumpulan data yang terorganisir dan mudah diakses",
+    c: "Program antivirus", d: "Jenis hardware",
+    correct: "b",
+    explain: "Database adalah sistem terorganisir untuk menyimpan, mengelola, dan mengambil kumpulan data secara efisien.",
+    example: "Contoh: Database sekolah berisi: nama siswa, nilai, absensi, informasi orang tua — semuanya tersimpan rapi!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📱",
+    q: "QR Code adalah...",
+    a: "Jenis virus", b: "Kode matriks yang menyimpan informasi dan bisa dipindai",
+    c: "Jenis keyboard", d: "Program browser",
+    correct: "b",
+    explain: "QR Code adalah kode 2D (kotak-kotak hitam putih) yang menyimpan informasi dan bisa dibaca oleh kamera HP.",
+    example: "Contoh: Scan QR code di restoran → langsung terbuka menu digital! Atau scan QR untuk bayar cashless!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📊",
+    q: "Backup data artinya...",
+    a: "Menghapus data lama", b: "Membuat salinan cadangan data penting",
+    c: "Mengirim data ke teman", d: "Mengkompresi data",
+    correct: "b",
+    explain: "Backup adalah membuat salinan data penting di tempat lain (hard disk, cloud) sebagai cadangan jika data asli hilang.",
+    example: "Tips: Backup foto penting ke Google Photos atau hard disk eksternal — jangan sampai foto kenangan hilang!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🗜️",
+    q: "File ZIP/RAR adalah...",
+    a: "Jenis virus", b: "File terkompresi yang ukurannya lebih kecil",
+    c: "Jenis gambar", d: "Program browser",
+    correct: "b",
+    explain: "ZIP/RAR adalah format file terkompresi yang mengurangi ukuran file agar lebih mudah disimpan atau dikirim.",
+    example: "Contoh: 10 foto masing-masing 5 MB = 50 MB → dikompres jadi ZIP → hanya 20 MB → lebih mudah dikirim email!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🔎",
+    q: "Metadata adalah...",
+    a: "Jenis database besar", b: "Data tentang data (informasi tambahan file)",
+    c: "Program khusus", d: "Jenis virus",
+    correct: "b",
+    explain: "Metadata adalah informasi tentang file itu sendiri, seperti kapan dibuat, siapa yang membuat, ukuran file, dll.",
+    example: "Contoh: Foto yang kamu ambil memiliki metadata: tanggal foto, lokasi GPS, jenis kamera yang digunakan!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📲",
+    q: "Barcode (kode batang) digunakan untuk...",
+    a: "Menghias produk", b: "Menyimpan informasi produk yang bisa dibaca mesin",
+    c: "Jenis dekorasi", d: "Mengamankan produk",
+    correct: "b",
+    explain: "Barcode adalah representasi data menggunakan garis-garis yang bisa dibaca oleh scanner, biasa digunakan di produk.",
+    example: "Contoh: Kasir supermarket scan barcode produk → langsung muncul nama dan harga produk di layar!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🤖",
+    q: "Machine Learning adalah...",
+    a: "Cara mengajar coding ke manusia", b: "Kemampuan komputer belajar dari data tanpa diprogram eksplisit",
+    c: "Jenis hardware khusus", d: "Program membuat robot",
+    correct: "b",
+    explain: "Machine Learning adalah cabang AI di mana komputer belajar dan meningkatkan kinerjanya sendiri dari pengalaman (data).",
+    example: "Contoh: Netflix merekomendasikan film berdasarkan tontonanmu sebelumnya = Machine Learning!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📡",
+    q: "Enkripsi data adalah...",
+    a: "Menghapus data penting", b: "Mengubah data menjadi kode rahasia agar aman",
+    c: "Memperbesar ukuran file", d: "Mencetak data",
+    correct: "b",
+    explain: "Enkripsi adalah proses mengubah data menjadi kode rahasia sehingga hanya pihak yang berwenang yang bisa membacanya.",
+    example: "Contoh: Pesan WhatsApp dienkripsi end-to-end → hanya pengirim dan penerima yang bisa membaca, bukan WhatsApp!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🔢",
+    q: "Berapa nilai angka 10 dalam sistem biner?",
+    a: "Satu nol", b: "Sepuluh", c: "Dua", d: "Satu",
+    correct: "c",
+    explain: "Dalam biner: 10 (biner) = 1×2¹ + 0×2⁰ = 2 + 0 = 2 (desimal). Jadi '10' biner artinya angka DUA!",
+    example: "Binar ke desimal: 10 = 2, 11 = 3, 100 = 4, 101 = 5, 110 = 6, 111 = 7, 1000 = 8!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📊",
+    q: "Apa fungsi grafik/chart dalam penyajian data?",
+    a: "Membuat data lebih sulit dipahami", b: "Membuat data lebih mudah dipahami secara visual",
+    c: "Menyembunyikan informasi", d: "Membuat laporan lebih panjang",
+    correct: "b",
+    explain: "Grafik mengubah data angka menjadi representasi visual yang lebih mudah dimengerti dan dibandingkan.",
+    example: "Mana lebih mudah dipahami: '50 anak suka bola, 30 suka basket, 20 suka renang' atau sebuah diagram batang?"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "🌐",
+    q: "Big Data adalah...",
+    a: "File berukuran besar saja", b: "Kumpulan data yang sangat besar dan kompleks yang sulit diproses secara tradisional",
+    c: "Jenis program komputer", d: "Nama perusahaan teknologi",
+    correct: "b",
+    explain: "Big Data adalah kumpulan data yang sangat besar, beragam, dan bergerak cepat sehingga membutuhkan teknologi khusus untuk diproses.",
+    example: "Contoh Big Data: Data transaksi jutaan pengguna Tokopedia setiap hari — terlalu besar untuk Excel biasa!"
+  },
+  {
+    cat: "📊 Data & Info", catClass: "cat-data", emoji: "📱",
+    q: "IoT (Internet of Things) adalah...",
+    a: "Jenis game online", b: "Jaringan perangkat sehari-hari yang terhubung ke internet",
+    c: "Merk handphone", d: "Jenis kabel internet",
+    correct: "b",
+    explain: "IoT adalah konsep di mana berbagai perangkat sehari-hari (TV, kulkas, lampu) terhubung dan bisa dikendalikan via internet.",
+    example: "Contoh IoT: Lampu rumah yang bisa dinyalakan dari HP, AC yang menyesuaikan suhu otomatis, kulkas pintar!"
+  },
+
+  // === KATEGORI 7: PEMROGRAMAN SCRATCH & VISUAL (soal 121-140) ===
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🎨",
+    q: "Di Scratch, blok berwarna BIRU (Motion) digunakan untuk...",
+    a: "Mengatur tampilan", b: "Menggerakkan sprite",
+    c: "Memainkan suara", d: "Mengontrol alur program",
+    correct: "b",
+    explain: "Blok Motion (biru) di Scratch mengontrol pergerakan sprite: maju, mundur, berputar, dan berpindah posisi.",
+    example: "Contoh blok Motion: 'move 10 steps' → sprite bergerak 10 langkah ke kanan!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "👁️",
+    q: "Di Scratch, blok berwarna UNGU (Looks) digunakan untuk...",
+    a: "Menggerakkan sprite", b: "Mengatur tampilan sprite (kostum, ucapan, efek)",
+    c: "Memainkan suara", d: "Mendeteksi sentuhan",
+    correct: "b",
+    explain: "Blok Looks (ungu) mengatur tampilan visual sprite: mengganti kostum, menampilkan balon kata, ukuran, dan efek visual.",
+    example: "Contoh blok Looks: 'say Hello! for 2 seconds' → sprite menampilkan balon ucapan 'Hello!' selama 2 detik!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🔊",
+    q: "Di Scratch, blok berwarna MERAH MUDA (Sound) digunakan untuk...",
+    a: "Menggerakkan sprite", b: "Mengatur tampilan",
+    c: "Memainkan suara dan musik", d: "Membuat variabel",
+    correct: "c",
+    explain: "Blok Sound (pink) di Scratch digunakan untuk memutar suara, efek suara, dan musik dalam animasi atau game.",
+    example: "Contoh: 'play sound Meow' → sprite kucing berbunyi 'meow' ketika kode ini dijalankan!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🟡",
+    q: "Di Scratch, blok berwarna KUNING (Control) digunakan untuk...",
+    a: "Menggerakkan sprite", b: "Mengontrol alur program (loop, if, wait)",
+    c: "Memainkan suara", d: "Menggambar",
+    correct: "b",
+    explain: "Blok Control (kuning) mengontrol alur program: repeat (loop), if/else (kondisi), wait (tunggu), dan stop.",
+    example: "Contoh: 'repeat 10 { move 10 steps }' → sprite bergerak 10 langkah, diulang 10 kali = total 100 langkah!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🔵",
+    q: "Di Scratch, blok SENSING (biru muda) digunakan untuk...",
+    a: "Menggerakkan sprite", b: "Mendeteksi kondisi (sentuhan, jarak, keyboard, mouse)",
+    c: "Memainkan suara", d: "Mengatur warna",
+    correct: "b",
+    explain: "Blok Sensing mendeteksi berbagai kondisi: apakah sprite menyentuh sesuatu, posisi mouse, tombol yang ditekan, dll.",
+    example: "Contoh: 'if touching edge then bounce' → jika sprite menyentuh tepi layar, langsung balik arah!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🟢",
+    q: "Blok 'When Green Flag clicked' di Scratch berfungsi untuk...",
+    a: "Menghentikan program", b: "Memulai program ketika tombol bendera hijau diklik",
+    c: "Mengubah warna sprite", d: "Menyimpan proyek",
+    correct: "b",
+    explain: "Blok 'When Green Flag clicked' adalah blok pemicu (trigger) yang memulai program saat pengguna klik tombol ▶ (bendera hijau).",
+    example: "Blok ini selalu ada di bagian ATAS kode karena menjadi titik awal program Scratch berjalan!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🎭",
+    q: "Costume (kostum) pada sprite Scratch adalah...",
+    a: "Suara yang dimainkan sprite", b: "Tampilan/penampilan visual sprite yang berbeda-beda",
+    c: "Nama sprite", d: "Ukuran sprite",
+    correct: "b",
+    explain: "Kostum adalah tampilan visual sprite. Satu sprite bisa punya banyak kostum untuk menciptakan efek animasi.",
+    example: "Contoh animasi: Sprite kucing punya kostum 1 (kaki kiri depan) dan kostum 2 (kaki kanan depan) → ganti-ganti = animasi berjalan!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🎨",
+    q: "Stage/Panggung di Scratch adalah...",
+    a: "Nama karakter utama", b: "Area tempat animasi dan game dimainkan/ditampilkan",
+    c: "Jenis blok kode", d: "Nama file proyek",
+    correct: "b",
+    explain: "Stage adalah area putih besar di Scratch tempat semua sprite bergerak dan animasi/game ditampilkan.",
+    example: "Stage = layar pertunjukan! Semua yang ada di Stage inilah yang dilihat penonton/pemain game-mu!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "📢",
+    q: "Blok 'broadcast' di Scratch digunakan untuk...",
+    a: "Memainkan suara keras", b: "Mengirim pesan ke sprite lain untuk memicu aksi",
+    c: "Mengubah latar belakang", d: "Menghentikan animasi",
+    correct: "b",
+    explain: "Broadcast mengirim pesan ke semua sprite. Sprite lain yang memiliki blok 'When I receive' akan merespons pesan itu.",
+    example: "Contoh: Sprite A broadcast 'mulai' → Sprite B yang punya 'when I receive mulai' akan mulai bergerak!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🔢",
+    q: "Variabel di Scratch digunakan untuk...",
+    a: "Mengubah warna sprite", b: "Menyimpan data seperti skor, nyawa, atau nama",
+    c: "Memainkan musik", d: "Menggerakkan sprite",
+    correct: "b",
+    explain: "Variabel di Scratch menyimpan nilai yang bisa berubah, sangat berguna untuk skor game, menghitung waktu, dll.",
+    example: "Contoh game: Variabel 'skor' dimulai dari 0 → setiap musuh ditangkap: set skor = skor + 10!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🖊️",
+    q: "Blok Pen di Scratch digunakan untuk...",
+    a: "Menulis teks di layar", b: "Menggambar garis mengikuti gerakan sprite",
+    c: "Menghapus sprite", d: "Mengatur suara",
+    correct: "b",
+    explain: "Blok Pen membuat sprite meninggalkan jejak garis saat bergerak, seperti pensil yang menggambar di atas kertas.",
+    example: "Contoh kreatif dengan Pen: Buat sprite berputar sambil pen aktif → menghasilkan gambar spiral yang indah!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🔄",
+    q: "Blok 'forever' di Scratch membuat program...",
+    a: "Berhenti setelah sekali jalan", b: "Berjalan terus-menerus tanpa berhenti",
+    c: "Berjalan 10 kali", d: "Menunggu input",
+    correct: "b",
+    explain: "Blok 'forever' membuat kode di dalamnya berjalan terus-menerus sampai program dihentikan (tombol stop diklik).",
+    example: "Contoh: 'forever { if key space pressed then move 10 steps }' → sprite terus siap bergerak saat Space ditekan!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🎮",
+    q: "Cara membuat sprite bergerak dengan tombol keyboard di Scratch adalah...",
+    a: "Blok looks", b: "Blok sound",
+    c: "Blok control + sensing ('if key pressed then move')", d: "Blok data",
+    correct: "c",
+    explain: "Untuk kontrol keyboard: gunakan blok Sensing 'key pressed?' dalam kondisi IF untuk menggerakkan sprite.",
+    example: "Kode: if (key right arrow pressed?) then move 10 steps → sprite bergerak kanan saat tekan tombol →!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🏆",
+    q: "Untuk membuat game di Scratch, hal pertama yang perlu direncanakan adalah...",
+    a: "Warna background dulu", b: "Tujuan/aturan game dan sprite yang dibutuhkan",
+    c: "Berapa banyak suara", d: "Ukuran stage",
+    correct: "b",
+    explain: "Perencanaan game dimulai dari tujuan (apa yang harus pemain lakukan?) dan karakter apa saja yang dibutuhkan.",
+    example: "Contoh perencanaan: Game 'tangkap apel' → sprite: keranjang + apel jatuh → tujuan: tangkap apel sebanyak mungkin!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "💬",
+    q: "Blok 'ask and wait' di Scratch digunakan untuk...",
+    a: "Memainkan musik", b: "Meminta input/jawaban dari pengguna",
+    c: "Menggambar lingkaran", d: "Mengatur kecepatan sprite",
+    correct: "b",
+    explain: "Blok 'ask and wait' menampilkan pertanyaan dan menunggu pengguna mengetik jawaban, yang tersimpan di variabel 'answer'.",
+    example: "Contoh: 'ask What is your name? and wait' → pengguna ketik nama → nama tersimpan di variabel 'answer'!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🎨",
+    q: "Backdrop (latar belakang) di Scratch adalah...",
+    a: "Nama sprite", b: "Gambar latar belakang stage",
+    c: "Jenis blok kode", d: "Efek suara",
+    correct: "b",
+    explain: "Backdrop adalah gambar latar belakang yang muncul di stage, bisa berupa pemandangan, ruangan, angkasa, dll.",
+    example: "Contoh: Buat game petualangan → backdrop hutan, kemudian ganti backdrop ke gua untuk scene berbeda!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "📐",
+    q: "Koordinat (x:0, y:0) di Scratch menunjukkan...",
+    a: "Pojok kiri atas stage", b: "Pojok kanan bawah stage",
+    c: "Tepat di tengah stage", d: "Pojok kiri bawah stage",
+    correct: "c",
+    explain: "Sistem koordinat Scratch: titik (0,0) ada di tengah stage. x+ ke kanan, x- ke kiri, y+ ke atas, y- ke bawah.",
+    example: "Stage Scratch: lebar 480 (-240 sampai +240), tinggi 360 (-180 sampai +180). Tengah = (0,0)!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🔊",
+    q: "Apa yang terjadi jika ada dua blok kode di sprite yang sama, keduanya dimulai dengan 'When Green Flag clicked'?",
+    a: "Hanya satu yang berjalan", b: "Program error", c: "Kedua kode berjalan bersamaan", d: "Sprite hilang",
+    correct: "c",
+    explain: "Scratch mendukung multithreading: dua atau lebih script bisa berjalan bersamaan secara paralel dalam satu sprite.",
+    example: "Contoh: Script 1 menggerakkan sprite, Script 2 memainkan musik — keduanya aktif bersamaan saat flag diklik!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "🏆",
+    q: "Scratch.mit.edu adalah...",
+    a: "Mesin pencari", b: "Platform resmi untuk membuat dan berbagi proyek Scratch",
+    c: "Toko aplikasi", d: "Jaringan sosial",
+    correct: "b",
+    explain: "Scratch.mit.edu adalah website resmi dari MIT tempat kamu bisa membuat proyek Scratch dan berbagi dengan dunia!",
+    example: "Di Scratch online: buat proyek → klik 'Share' → proyek bisa dimainkan siapa saja di seluruh dunia!"
+  },
+  {
+    cat: "🐱 Scratch", catClass: "cat-scratch", emoji: "💡",
+    q: "Remixing di Scratch berarti...",
+    a: "Menghapus proyek orang lain", b: "Mengambil proyek orang lain dan memodifikasinya",
+    c: "Menjual proyek", d: "Menyalin seluruh kode tanpa izin",
+    correct: "b",
+    explain: "Remix di Scratch adalah fitur yang memungkinkan kamu menggunakan proyek orang lain sebagai dasar dan memodifikasinya.",
+    example: "Contoh: Kamu suka game Scratch milik temanmu → klik Remix → modifikasi → jadikan versi unikmu sendiri!"
+  },
+
+  // === KATEGORI 8: TEKNOLOGI MASA DEPAN & UMUM (soal 141-160) ===
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🤖",
+    q: "Robot adalah...",
+    a: "Hewan peliharaan digital", b: "Mesin yang bisa melakukan tugas secara otomatis",
+    c: "Jenis virus komputer", d: "Program browser",
+    correct: "b",
+    explain: "Robot adalah mesin yang diprogram untuk melakukan tugas tertentu secara otomatis, bisa bergerak, dan merespons lingkungannya.",
+    example: "Contoh robot: 🏭 Robot pabrik mobil, 🤖 Robot pelayan restoran, 🚀 Robot penjelajah Mars Curiosity!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🎧",
+    q: "Virtual Reality (VR) adalah...",
+    a: "Game biasa di HP", b: "Pengalaman imersif dalam dunia digital buatan menggunakan headset",
+    c: "Jenis kamera video", d: "Nama software edit video",
+    correct: "b",
+    explain: "VR (Virtual Reality) menciptakan lingkungan digital 3D yang sepenuhnya imersif, diakses menggunakan headset khusus.",
+    example: "Contoh VR: Pakai headset Meta Quest → seolah-olah masuk ke dunia game atau museum virtual 360°!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "📱",
+    q: "Augmented Reality (AR) adalah...",
+    a: "Dunia virtual penuh", b: "Penggabungan dunia nyata dengan elemen digital",
+    c: "Jenis kamera", d: "Program antivirus",
+    correct: "b",
+    explain: "AR (Augmented Reality) menambahkan elemen digital (gambar, teks, animasi) ke tampilan dunia nyata melalui kamera.",
+    example: "Contoh AR: Game Pokemon Go → Pokemon muncul di dunia nyata melalui kamera HP-mu!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🌐",
+    q: "5G adalah...",
+    a: "Ukuran file digital", b: "Generasi kelima jaringan seluler yang sangat cepat",
+    c: "Jenis komputer", d: "Nama browser baru",
+    correct: "b",
+    explain: "5G adalah teknologi jaringan seluler generasi ke-5 yang jauh lebih cepat dari 4G, mendukung IoT dan kendaraan otonom.",
+    example: "Kecepatan 5G bisa mencapai 10 Gbps — bisa download film HD dalam hitungan detik!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🔗",
+    q: "Blockchain adalah...",
+    a: "Jenis permainan", b: "Teknologi penyimpanan data terdesentralisasi yang aman",
+    c: "Jenis virus", d: "Nama program antivirus",
+    correct: "b",
+    explain: "Blockchain adalah teknologi yang menyimpan data dalam rantai blok yang terenkripsi dan tersebar, sangat aman dan transparan.",
+    example: "Contoh penggunaan blockchain: Bitcoin (mata uang digital), kontrak digital, sertifikat ijazah digital!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "☁️",
+    q: "Cloud computing berarti...",
+    a: "Komputer yang berbentuk awan", b: "Menggunakan sumber daya komputasi melalui internet",
+    c: "Jenis cuaca digital", d: "Program khusus untuk awan",
+    correct: "b",
+    explain: "Cloud computing memungkinkan akses ke server, penyimpanan, dan software melalui internet tanpa perlu hardware sendiri.",
+    example: "Contoh: Google Docs, Gmail, iCloud — semua berjalan di 'cloud' (server Google/Apple) bukan di laptopmu!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🚗",
+    q: "Kendaraan otonom/self-driving car adalah...",
+    a: "Mobil yang bisa terbang", b: "Mobil yang bisa mengemudi sendiri menggunakan AI",
+    c: "Mobil listrik biasa", d: "Mobil remote control",
+    correct: "b",
+    explain: "Self-driving car menggunakan AI, sensor, kamera, dan radar untuk mengemudi sendiri tanpa bantuan manusia.",
+    example: "Contoh: Tesla Autopilot bisa mengemudi di jalan tol sendiri, mengikuti rambu dan menghindari kendaraan lain!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🖨️",
+    q: "Printer 3D digunakan untuk...",
+    a: "Mencetak dokumen biasa", b: "Membuat objek fisik 3D dari desain digital",
+    c: "Mencetak foto berwarna saja", d: "Menggambar di kertas",
+    correct: "b",
+    explain: "Printer 3D bisa membuat objek tiga dimensi nyata dari bahan seperti plastik, berdasarkan desain digital di komputer.",
+    example: "Contoh: Desain mainan di komputer → kirim ke printer 3D → printer mencetak mainan plastik nyata!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🔬",
+    q: "Siapa yang disebut 'programmer' atau 'developer'?",
+    a: "Orang yang menjual komputer", b: "Orang yang menulis kode program komputer",
+    c: "Orang yang membetulkan hardware", d: "Orang yang desain komputer",
+    correct: "b",
+    explain: "Programmer/developer adalah orang yang menulis kode program untuk membuat aplikasi, website, game, dan software.",
+    example: "Contoh: Programmer membuat aplikasi Gojek → kita bisa pesan ojek online → semua itu berkat kode mereka!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🌐",
+    q: "Open Source software adalah...",
+    a: "Software yang harus dibayar", b: "Software yang kode sumbernya tersedia bebas untuk umum",
+    c: "Software buatan pemerintah", d: "Software khusus untuk programmer",
+    correct: "b",
+    explain: "Open Source artinya kode sumber program tersedia terbuka, siapa saja bisa melihat, menggunakan, dan mengembangkannya.",
+    example: "Contoh Open Source: Linux OS, Firefox browser, LibreOffice, VLC Media Player — semuanya GRATIS!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "📺",
+    q: "Smart TV berbeda dari TV biasa karena...",
+    a: "Lebih ringan", b: "Bisa terhubung ke internet dan menjalankan aplikasi",
+    c: "Layarnya lebih besar", d: "Lebih murah",
+    correct: "b",
+    explain: "Smart TV memiliki sistem operasi dan bisa terhubung ke internet untuk streaming YouTube, Netflix, dll langsung dari TV.",
+    example: "Dengan Smart TV: buka Netflix di TV → pilih film → nonton langsung tanpa perlu laptop atau HP!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🏠",
+    q: "Smart home (rumah pintar) menggunakan teknologi untuk...",
+    a: "Membuat rumah lebih besar", b: "Mengotomasi dan mengendalikan perangkat rumah via internet",
+    c: "Membuat dinding lebih kuat", d: "Menghemat bahan bangunan",
+    correct: "b",
+    explain: "Smart home menghubungkan perangkat rumah (lampu, AC, kunci, kamera) ke internet sehingga bisa dikontrol otomatis atau dari jarak jauh.",
+    example: "Contoh: Kamu lupa matikan lampu → buka aplikasi di HP → matikan lampu dari sekolah via WiFi!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "💊",
+    q: "Teknologi coding membantu dunia medis/kesehatan dengan cara...",
+    a: "Membuat dokter tidak dibutuhkan", b: "Membantu diagnosa, rekam medis digital, dan perangkat kesehatan",
+    c: "Menggantikan obat-obatan", d: "Tidak ada hubungannya dengan kesehatan",
+    correct: "b",
+    explain: "Teknologi coding sangat membantu dunia medis: sistem rekam medis, AI diagnosa penyakit, alat kesehatan pintar, telemedicine.",
+    example: "Contoh: Dokter pakai AI untuk analisis foto X-ray → AI mendeteksi kanker lebih cepat dan akurat dari mata manusia!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🎓",
+    q: "Coding penting dipelajari sejak dini karena...",
+    a: "Agar bisa membuat hardware sendiri", b: "Untuk melatih logika, kreativitas, dan pemecahan masalah",
+    c: "Agar tidak perlu sekolah", d: "Karena semua pekerjaan butuh coding",
+    correct: "b",
+    explain: "Belajar coding melatih computational thinking: logika, pemecahan masalah, kreativitas, dan ketekunan — skill penting di abad 21!",
+    example: "Belajar coding = belajar cara berpikir terstruktur! Skill ini berguna bahkan jika kamu tidak jadi programmer!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🌍",
+    q: "Teknologi dapat membantu lingkungan melalui...",
+    a: "Membuat lebih banyak sampah elektronik saja", b: "Pemantauan cuaca, efisiensi energi, dan deteksi polusi",
+    c: "Merusak hutan lebih cepat", d: "Tidak ada hubungannya dengan lingkungan",
+    correct: "b",
+    explain: "Teknologi membantu lingkungan: sensor pemantau kualitas udara, panel surya pintar, sistem irigasi efisien, deteksi kebakaran hutan.",
+    example: "Contoh: Sensor IoT di sungai memantau tingkat polusi secara real-time → data dikirim ke dinas lingkungan!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🎨",
+    q: "UX/UI Design dalam teknologi adalah...",
+    a: "Cara membuat hardware komputer", b: "Desain tampilan dan pengalaman pengguna dalam aplikasi",
+    c: "Jenis bahasa pemrograman", d: "Nama perusahaan teknologi",
+    correct: "b",
+    explain: "UI (User Interface) = tampilan aplikasi. UX (User Experience) = pengalaman pengguna saat menggunakan aplikasi.",
+    example: "Contoh: Tombol besar mudah diklik = UI bagus. Aplikasi mudah dimengerti tanpa manual = UX bagus!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🔭",
+    q: "Yang bisa kamu buat dengan kemampuan coding adalah...",
+    a: "Hanya program komputer saja", b: "Hanya website saja",
+    c: "Game, website, aplikasi, robot, dan masih banyak lagi!", d: "Hanya game saja",
+    correct: "c",
+    explain: "Dengan coding, kamu bisa membuat hampir apa saja: website, aplikasi HP, game, robot, AI, animasi, dan masih banyak lagi!",
+    example: "Contoh kreasi dengan coding: 🎮 Game → Minecraft dibuat dengan Java, 📱 App → WhatsApp, 🤖 Robot → robot pabrik!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "🌟",
+    q: "Cara terbaik belajar coding untuk pemula adalah...",
+    a: "Langsung buat program sangat rumit", b: "Mulai dari proyek sederhana dan tingkatkan perlahan",
+    c: "Menghafal semua kode", d: "Tidak perlu latihan",
+    correct: "b",
+    explain: "Belajar coding yang efektif dimulai dari proyek kecil yang menyenangkan, kemudian tingkatkan kompleksitas secara bertahap.",
+    example: "Perjalanan coder: Scratch → Python sederhana → Website HTML → Aplikasi → Game → AI — satu langkah demi satu langkah!"
+  },
+  {
+    cat: "🚀 Teknologi", catClass: "cat-algorithm", emoji: "✨",
+    q: "Manfaat utama belajar coding sejak kelas 4 SD adalah...",
+    a: "Langsung jadi kaya", b: "Melatih berpikir logis, kreatif, dan siap menghadapi masa depan digital",
+    c: "Tidak perlu belajar mata pelajaran lain", d: "Bisa main game lebih lama",
+    correct: "b",
+    explain: "Belajar coding melatih logika, kreativitas, pemecahan masalah, dan ketekunan — kemampuan yang sangat dibutuhkan di era digital!",
+    example: "Ingat: Dunia masa depan butuh orang yang bisa berpikir komputasional. Kamu yang belajar coding sekarang = generasi pencipta masa depan! 🚀"
+  },
+  {
+    cat: "💻 Dasar Komputer", catClass: "cat-basic", emoji: "🖥️",
+    q: "Tombol 'Enter' atau 'Return' pada keyboard berfungsi untuk...",
+    a: "Menghapus teks", b: "Menyalin teks",
+    c: "Mengkonfirmasi perintah atau berpindah ke baris baru", d: "Mematikan komputer",
+    correct: "c",
+    explain: "Tombol Enter digunakan untuk mengkonfirmasi perintah (misalnya saat search di Google) atau membuat baris baru saat mengetik teks.",
+    example: "Contoh: Ketik 'Resep kue coklat' di Google → tekan Enter → Google langsung mencari! Atau di Word: tekan Enter = baris baru!"
+  }
+];
+
+// ======== AVATAR ========
+function selectAvatar(btn, avatar) {
+  document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedAvatar = avatar;
+}
+
+// ======== START EXAM ========
+function startExam() {
+  const name = document.getElementById("student-name").value.trim();
+  if (!name) { alert("📝 Tulis nama lengkapmu dulu ya!"); return; }
+
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+
+  document.getElementById("display-name").innerText = name;
+  document.getElementById("header-avatar").innerText = selectedAvatar;
+  document.getElementById("login-screen").classList.add("hidden");
+  document.getElementById("quiz-area").classList.remove("hidden");
+
+  renderQuestions();
+  startTimer();
+}
+
+// ======== RENDER QUESTIONS ========
+function renderQuestions() {
+  const list = document.getElementById("questions-list");
+  questions.forEach((q, i) => {
+    const card = document.createElement("div");
+    card.className = "question-card p-6";
+    card.style.animationDelay = Math.min(i * 0.03, 3) + 's';
+
+    card.innerHTML = `
+      <div class="flex items-start gap-3 mb-4">
+        <div class="text-3xl flex-shrink-0 mt-1">${q.emoji}</div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-slate-400 font-black text-sm">#${i+1}</span>
+            <span class="cat-badge ${q.catClass}">${q.cat}</span>
+          </div>
+          <p class="font-bold text-slate-800 text-base leading-relaxed">${q.q}</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-3">
+        ${["a","b","c","d"].map(opt => `
+          <div class="option-wrapper">
+            <input type="radio" id="q${i}_${opt}" name="q${i}" value="${opt}"
+              class="option-input" onchange="answerChanged(${i})">
+            <label for="q${i}_${opt}" class="option-label">
+              <div class="option-letter">${opt.toUpperCase()}</div>
+              <span class="font-semibold text-sm">${q[opt]}</span>
+            </label>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ======== ANSWER CHANGED ========
+function answerChanged(idx) {
+  const sel = document.querySelector(`input[name=q${idx}]:checked`);
+  if (sel) userAnswers[idx] = sel.value;
+  updateCounter();
+}
+
+function updateCounter() {
+  const answered = Object.keys(userAnswers).length;
+  const total = questions.length;
+  document.getElementById("unanswered-count").innerText = total - answered;
+  document.getElementById("progress-text").innerText = `${answered} / ${total}`;
+  document.getElementById("progress-bar").style.width = (answered / total * 100) + "%";
+}
+
+// ======== TIMER ========
+function startTimer() {
+  const timerEl = document.getElementById("timer");
+  timerInterval = setInterval(() => {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerEl.innerText = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    if (timeLeft <= 300) timerEl.classList.add("urgent");
+    if (timeLeft <= 0) { clearInterval(timerInterval); finishExam(); }
+    timeLeft--;
+  }, 1000);
+}
+
+// ======== FINISH EXAM ========
+function finishExam() {
+  const unanswered = questions.length - Object.keys(userAnswers).length;
+  if (unanswered > 0) {
+    const ok = confirm(`⚠️ Kamu masih belum menjawab ${unanswered} soal.\nYakin mau selesai sekarang?`);
+    if (!ok) return;
+  }
+
+  clearInterval(timerInterval);
+
+  let benar = 0;
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === q.correct) benar++;
+  });
+
+  const salah = Object.keys(userAnswers).filter((i) => userAnswers[i] !== questions[i].correct).length;
+  const skip = questions.length - Object.keys(userAnswers).length;
+  const score = Math.round((benar / questions.length) * 100);
+
+  // Show result
+  document.getElementById("quiz-area").classList.add("hidden");
+  document.getElementById("result-screen").classList.remove("hidden");
+  document.getElementById("final-score").innerText = score;
+  document.getElementById("result-avatar").innerText = selectedAvatar;
+  document.getElementById("result-name").innerText = document.getElementById("display-name").innerText;
+  document.getElementById("stat-correct").innerText = benar;
+  document.getElementById("stat-wrong").innerText = salah;
+  document.getElementById("stat-skip").innerText = skip;
+
+  // Grade
+  let grade, gradeColor;
+  if (score >= 90) { grade = "🏆 Luar Biasa! Coding Master!"; gradeColor = "text-yellow-500"; }
+  else if (score >= 80) { grade = "⭐ Hebat! Hampir Sempurna!"; gradeColor = "text-blue-500"; }
+  else if (score >= 70) { grade = "👍 Bagus! Terus Belajar!"; gradeColor = "text-green-500"; }
+  else if (score >= 60) { grade = "📚 Lumayan! Masih Bisa Lebih Baik!"; gradeColor = "text-orange-500"; }
+  else { grade = "💪 Semangat! Belajar Lagi Yuk!"; gradeColor = "text-red-500"; }
+
+  document.getElementById("score-grade").innerText = grade;
+  document.getElementById("score-grade").className = "text-2xl font-black mb-2 " + gradeColor;
+  document.getElementById("score-details").innerText =
+    `Kamu menjawab benar ${benar} dari ${questions.length} soal dalam waktu ${formatTimeTaken()}.`;
+
+  // Score ring
+  document.getElementById("score-ring").innerHTML = `
+    <svg width="160" height="160" viewBox="0 0 160 160">
+      <circle cx="80" cy="80" r="70" fill="none" stroke="#e2e8f0" stroke-width="12"/>
+      <circle cx="80" cy="80" r="70" fill="none" stroke="${score >= 70 ? '#4f46e5' : '#ef4444'}"
+        stroke-width="12" stroke-dasharray="${2 * Math.PI * 70}"
+        stroke-dashoffset="${2 * Math.PI * 70 * (1 - score/100)}"
+        stroke-linecap="round" transform="rotate(-90 80 80)"
+        style="transition: stroke-dashoffset 1.5s ease"/>
+    </svg>
+    <div style="position:absolute;font-size:36px">${selectedAvatar}</div>
+  `;
+
+  if (score >= 80) {
+    confetti({ particleCount: 200, spread: 90, origin: { y: 0.5 } });
+    setTimeout(() => confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } }), 500);
+    setTimeout(() => confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } }), 1000);
+  }
+}
+
+function formatTimeTaken() {
+  const elapsed = 45 * 60 - timeLeft - 1;
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  return `${m} menit ${s} detik`;
+}
+
+// ======== SHOW REVIEW ========
+function showReview() {
+  document.getElementById("review-section").classList.remove("hidden");
+  document.getElementById("review-section").scrollIntoView({ behavior: 'smooth' });
+
+  const list = document.getElementById("review-list");
+  list.innerHTML = '';
+
+  questions.forEach((q, i) => {
+    const userAns = userAnswers[i] || null;
+    const isCorrect = userAns === q.correct;
+    const isSkipped = !userAns;
+
+    const div = document.createElement("div");
+    div.className = isCorrect ? "review-correct" : "review-wrong";
+
+    const statusIcon = isCorrect ? "✅" : (isSkipped ? "⏭️" : "❌");
+    const statusText = isCorrect ? "BENAR" : (isSkipped ? "DILEWATI" : "SALAH");
+    const statusColor = isCorrect ? "text-green-700" : (isSkipped ? "text-yellow-700" : "text-red-700");
+
+    div.innerHTML = `
+      <div class="flex items-start gap-3 mb-3">
+        <span class="text-2xl">${q.emoji}</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="font-black text-sm text-slate-400">#${i+1}</span>
+            <span class="cat-badge ${q.catClass}">${q.cat}</span>
+            <span class="font-black ${statusColor}">${statusIcon} ${statusText}</span>
+          </div>
+          <p class="font-bold text-slate-800">${q.q}</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-2 mb-3">
+        ${["a","b","c","d"].map(opt => {
+          let style = "p-3 rounded-xl border-2 text-sm font-semibold flex gap-2 items-center";
+          if (opt === q.correct) style += " bg-green-100 border-green-400 text-green-800";
+          else if (opt === userAns && !isCorrect) style += " bg-red-100 border-red-400 text-red-800 line-through";
+          else style += " bg-white border-slate-200 text-slate-500";
+          const mark = opt === q.correct ? "✅" : (opt === userAns && !isCorrect ? "❌" : "○");
+          return `<div class="${style}">${mark} <b>${opt.toUpperCase()}.</b> ${q[opt]}</div>`;
+        }).join('')}
+      </div>
+
+      ${!isCorrect && userAns ? `
+        <div class="text-sm font-bold text-red-600 mb-2">
+          Jawabanmu: <b>${userAns.toUpperCase()}. ${q[userAns]}</b>
+          → Jawaban benar: <b>${q.correct.toUpperCase()}. ${q[q.correct]}</b>
+        </div>
+      ` : ''}
+
+      <div class="explanation-box">
+        <div class="flex gap-2 items-start">
+          <span class="text-xl">💡</span>
+          <div>
+            <p class="font-black text-amber-800 text-sm mb-1">Penjelasan:</p>
+            <p class="text-amber-900 text-sm">${q.explain}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="flex gap-2 items-start">
+          <span class="text-xl">🖥️</span>
+          <div>
+            <p class="font-black text-blue-800 text-sm mb-1">Contoh:</p>
+            <p class="text-blue-900 text-sm whitespace-pre-line">${q.example}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ======== ADMIN RESET ========
+function adminReset() {
+  if (document.getElementById("admin-pass").value === ADMIN_PASSWORD) {
+    location.reload();
+  } else {
+    alert("🔐 Password salah!");
+  }
+}
+</script>
+</body>
+</html>
